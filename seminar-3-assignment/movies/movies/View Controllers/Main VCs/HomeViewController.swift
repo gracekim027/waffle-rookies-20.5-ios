@@ -11,6 +11,8 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
+    private let defaults = UserDefaults.standard
+    
     private let item: CustomTabItem
     let titleLabel = UILabel()
     let headerLabel = UILabel()
@@ -25,7 +27,7 @@ class HomeViewController: UIViewController {
    // var filterButton = UISegmentedControl(items: ["Popular", "What's New?"])
     let recentButton = UIButton()
     let popularButton = UIButton()
-   // let movieListView = UICollectionView()
+    let movieListView = UICollectionView(frame: .zero)
     
     init(item: CustomTabItem) {
             self.item = item
@@ -47,12 +49,13 @@ class HomeViewController: UIViewController {
         self.view.addSubview(categoryLabel)
         self.view.addSubview(categoryStack)
         self.view.addSubview(codeSegmented)
-       // self.view.addSubview(movieListView)
+        self.view.addSubview(movieListView)
         
         configureHeader()
         configureSearchBar()
         configureCategoryStack()
         configureSegmentedControl()
+        configureMovieList()
         //question: how to set size for frame that hasn't been defined yet?
         // Do any additional setup after loading the view.
     }
@@ -146,4 +149,38 @@ class HomeViewController: UIViewController {
         print("changed Items!")
     }
     
+    func configureMovieList(){
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        movieListView.collectionViewLayout = layout
+        movieListView.dataSource = self
+        movieListView.delegate = self
+        movieListView.backgroundColor = .clear
+        movieListView.topAnchor.constraint(equalTo: self.codeSegmented.bottomAnchor, constant: 10).isActive = true
+        movieListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
+        movieListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -24).isActive = true
+        movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        
+        
+    }
+    
+}
+
+extension HomeViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width/2.5, height: 150)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MoviesListCollectionViewCell", for: indexPath) as? MoviesListCollectionViewCell else { return UICollectionViewCell() }
+        cell.configureMovie(<#T##movie: Movie##Movie#>)
+        return cell
+    }
+    
+    
+   
 }

@@ -10,6 +10,7 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
+    private let item: CustomTabItem
     let titleLabel = UILabel()
     let headerLabel = UILabel()
     let profilePic = UIButton()
@@ -17,12 +18,22 @@ class HomeViewController: UIViewController {
     //let categoryStack = CategoryStackView()
     let categoryStack = UIView()
     let categoryLabel = UILabel()
-
     
-    var filterButton = UISegmentedControl(items: ["Popular", "What's New?"])
+    var codeSegmented = CustomSegmentedControl(buttonTitle: ["Popular","What's New?"])
+    
+   // var filterButton = UISegmentedControl(items: ["Popular", "What's New?"])
     let recentButton = UIButton()
     let popularButton = UIButton()
    // let movieListView = UICollectionView()
+    
+    init(item: CustomTabItem) {
+            self.item = item
+            super.init(nibName: nil, bundle: nil)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
 
     override func viewDidLoad() {
         
@@ -34,7 +45,7 @@ class HomeViewController: UIViewController {
         self.view.addSubview(searchBar)
         self.view.addSubview(categoryLabel)
         self.view.addSubview(categoryStack)
-        self.view.addSubview(filterButton)
+        self.view.addSubview(codeSegmented)
        // self.view.addSubview(movieListView)
         
         configureHeader()
@@ -105,6 +116,7 @@ class HomeViewController: UIViewController {
     func configureSegmentedControl(){
     
         //filterButton = UISegmentedControl(items: ["Popular", "What's New?"])
+        /*
         self.filterButton.translatesAutoresizingMaskIntoConstraints = false
         self.filterButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
         self.filterButton.topAnchor.constraint(equalTo: self.categoryStack.bottomAnchor, constant: 25).isActive = true
@@ -119,8 +131,13 @@ class HomeViewController: UIViewController {
                                   NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
         
         self.filterButton.setTitleTextAttributes(unselectedAttributes, for: .normal)
-        self.filterButton.setTitleTextAttributes(selectedAttributes, for: .selected)
-        
+        self.filterButton.setTitleTextAttributes(selectedAttributes, for: .selected)*/
+        codeSegmented.backgroundColor = .clear
+        self.codeSegmented.translatesAutoresizingMaskIntoConstraints = false
+        self.codeSegmented.topAnchor.constraint(equalTo: self.categoryStack.bottomAnchor, constant: 25).isActive = true
+        self.codeSegmented.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
+        self.codeSegmented.heightAnchor.constraint(equalToConstant: 23).isActive = true
+        self.codeSegmented.widthAnchor.constraint(greaterThanOrEqualToConstant: 180).isActive = true
     }
     
     @objc func didTapChangeFilter(){

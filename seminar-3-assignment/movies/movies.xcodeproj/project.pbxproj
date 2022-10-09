@@ -18,6 +18,12 @@
 		6549046628F28B6500CC7C9A /* CustomTabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549046528F28B6500CC7C9A /* CustomTabItem.swift */; };
 		6549046828F28B9800CC7C9A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549046728F28B9800CC7C9A /* Extensions.swift */; };
 		6549046D28F2920B00CC7C9A /* CustomSegmentedControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549046C28F2920B00CC7C9A /* CustomSegmentedControll.swift */; };
+		6549047028F2DFA300CC7C9A /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549046F28F2DFA300CC7C9A /* Movie.swift */; };
+		6549047328F2E00A00CC7C9A /* MovieService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549047228F2E00A00CC7C9A /* MovieService.swift */; };
+		6549047528F2EBE500CC7C9A /* MovieStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549047428F2EBE500CC7C9A /* MovieStore.swift */; };
+		6549047828F2EEAD00CC7C9A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549047728F2EEAD00CC7C9A /* Utils.swift */; };
+		6549047A28F2F63200CC7C9A /* Movie+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549047928F2F63200CC7C9A /* Movie+Stub.swift */; };
+		6549047D28F30C2500CC7C9A /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549047C28F30C2500CC7C9A /* ImageLoader.swift */; };
 		65677BBB28F17D5C001885BF /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65677BBA28F17D5C001885BF /* HomeViewController.swift */; };
 		65677BBD28F17D65001885BF /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65677BBC28F17D65001885BF /* FavoritesViewController.swift */; };
 		65677BBF28F17D90001885BF /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65677BBE28F17D90001885BF /* Styles.swift */; };
@@ -42,6 +48,12 @@
 		6549046528F28B6500CC7C9A /* CustomTabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabItem.swift; sourceTree = "<group>"; };
 		6549046728F28B9800CC7C9A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6549046C28F2920B00CC7C9A /* CustomSegmentedControll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSegmentedControll.swift; sourceTree = "<group>"; };
+		6549046F28F2DFA300CC7C9A /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		6549047228F2E00A00CC7C9A /* MovieService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieService.swift; sourceTree = "<group>"; };
+		6549047428F2EBE500CC7C9A /* MovieStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieStore.swift; sourceTree = "<group>"; };
+		6549047728F2EEAD00CC7C9A /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		6549047928F2F63200CC7C9A /* Movie+Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Movie+Stub.swift"; sourceTree = "<group>"; };
+		6549047C28F30C2500CC7C9A /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		65677BBA28F17D5C001885BF /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		65677BBC28F17D65001885BF /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		65677BBE28F17D90001885BF /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
@@ -131,6 +143,25 @@
 			path = "Main VCs";
 			sourceTree = "<group>";
 		};
+		6549046E28F2DF9700CC7C9A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6549046F28F2DFA300CC7C9A /* Movie.swift */,
+				6549047928F2F63200CC7C9A /* Movie+Stub.swift */,
+				6549047C28F30C2500CC7C9A /* ImageLoader.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		6549047128F2DFF500CC7C9A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6549047228F2E00A00CC7C9A /* MovieService.swift */,
+				6549047428F2EBE500CC7C9A /* MovieStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		65677BC028F17DF6001885BF /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +204,8 @@
 		65D238CF28F140F5004F35BE /* movies */ = {
 			isa = PBXGroup;
 			children = (
+				6549047128F2DFF500CC7C9A /* Services */,
+				6549046E28F2DF9700CC7C9A /* Models */,
 				6549044D28F286A600CC7C9A /* Customs */,
 				65677BC528F18D1C001885BF /* Cells */,
 				65677BC028F17DF6001885BF /* View Controllers */,
@@ -181,6 +214,7 @@
 				65D238D928F140F7004F35BE /* Assets.xcassets */,
 				65D238DE28F140F7004F35BE /* Info.plist */,
 				65677BBE28F17D90001885BF /* Styles.swift */,
+				6549047728F2EEAD00CC7C9A /* Utils.swift */,
 			);
 			path = movies;
 			sourceTree = "<group>";
@@ -294,18 +328,24 @@
 			files = (
 				6549046028F28AFA00CC7C9A /* CustomItemView.swift in Sources */,
 				65677BC828F18D3F001885BF /* MoviesListCollectionViewCell.swift in Sources */,
+				6549047028F2DFA300CC7C9A /* Movie.swift in Sources */,
 				65677BC428F18D18001885BF /* MovieDetailCollectionViewCell.swift in Sources */,
+				6549047528F2EBE500CC7C9A /* MovieStore.swift in Sources */,
 				6549046228F28B2600CC7C9A /* CustomTabBar.swift in Sources */,
 				65677BCA28F18D5A001885BF /* MovieDetailCollectionViewController.swift in Sources */,
 				65D238D528F140F5004F35BE /* TabBarViewController.swift in Sources */,
 				65D238D128F140F5004F35BE /* AppDelegate.swift in Sources */,
 				6549046D28F2920B00CC7C9A /* CustomSegmentedControll.swift in Sources */,
 				6549046628F28B6500CC7C9A /* CustomTabItem.swift in Sources */,
+				6549047328F2E00A00CC7C9A /* MovieService.swift in Sources */,
 				65677BC228F18ACE001885BF /* CategoryStackView.swift in Sources */,
 				6549046428F28B4A00CC7C9A /* CustomTabBarController.swift in Sources */,
 				65D238D328F140F5004F35BE /* SceneDelegate.swift in Sources */,
+				6549047D28F30C2500CC7C9A /* ImageLoader.swift in Sources */,
 				6549046828F28B9800CC7C9A /* Extensions.swift in Sources */,
+				6549047A28F2F63200CC7C9A /* Movie+Stub.swift in Sources */,
 				65677BBF28F17D90001885BF /* Styles.swift in Sources */,
+				6549047828F2EEAD00CC7C9A /* Utils.swift in Sources */,
 				65677BCC28F18D66001885BF /* MoviesListCollectionViewController.swift in Sources */,
 				65677BBD28F17D65001885BF /* FavoritesViewController.swift in Sources */,
 				65677BBB28F17D5C001885BF /* HomeViewController.swift in Sources */,

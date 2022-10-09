@@ -10,16 +10,7 @@ import UIKit
 /*
 class CategoryStackView: UIStackView {
     
-    var buttons : [UIButton] = []
-    
-    //action: 😮‍💨
-    //comedy: 😝
-    //drama: 😢
-    //horror: 😱
-    //mystery: 🤫
-    //romance: 😘
-    //sci-fi: 🤯
-    //history: 🤠
+    var buttons : [UIButton]!
     
     init(){
         super.init(frame: .zero)
@@ -50,6 +41,12 @@ class CategoryStackView: UIStackView {
         buttons.append(romanceButton)
         buttons.append(sci_fiButton)
         buttons.append(historyButton)
+        for customButton in buttons {
+            customButton.addTarget(self, action: #selector(didTapChangeCategory), for: .touchUpInside)
+        }
+    }
+    
+    @objc func didTapChangeCategory(){
     }
 }
 
@@ -86,4 +83,5 @@ class categoryButton : UIButton {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}*/
+}
+*/

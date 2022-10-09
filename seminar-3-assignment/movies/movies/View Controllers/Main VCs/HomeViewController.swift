@@ -5,8 +5,9 @@
 //  Created by grace kim  on 2022/10/08.
 //
 
-import UIKit
+//TODO: make the phone turn automatically into dark mode?
 
+import UIKit
 
 class HomeViewController: UIViewController {
     
@@ -19,7 +20,7 @@ class HomeViewController: UIViewController {
     let categoryStack = UIView()
     let categoryLabel = UILabel()
     
-    var codeSegmented = CustomSegmentedControl(buttonTitle: ["Popular","What's New?"])
+    var codeSegmented = CustomSegmentedControl(buttonTitle: ["Popular","Top Rated"])
     
    // var filterButton = UISegmentedControl(items: ["Popular", "What's New?"])
     let recentButton = UIButton()
@@ -107,9 +108,9 @@ class HomeViewController: UIViewController {
         self.categoryStack.translatesAutoresizingMaskIntoConstraints = false
         self.categoryStack.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
         self.categoryStack.topAnchor.constraint(equalTo: self.categoryLabel.bottomAnchor, constant: 8).isActive = true
-        self.categoryStack.heightAnchor.constraint(equalToConstant: 50).isActive = true
+       self.categoryStack.heightAnchor.constraint(equalToConstant: 50).isActive = true
        self.categoryStack.widthAnchor.constraint(equalToConstant: self.view.frame.width-48).isActive = true
-       self.categoryStack.backgroundColor = .darkGray
+       self.categoryStack.backgroundColor = .clear
     }
     
     //view switch with segmeneted control
@@ -141,7 +142,8 @@ class HomeViewController: UIViewController {
     }
     
     @objc func didTapChangeFilter(){
-        
+        //TODO: change this to post notification 
+        print("changed Items!")
     }
     
 }

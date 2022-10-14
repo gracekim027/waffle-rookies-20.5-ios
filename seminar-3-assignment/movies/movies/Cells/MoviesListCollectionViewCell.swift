@@ -9,26 +9,27 @@ import UIKit
 
 ///cell used for list views --> has movie poster, title, and rating on top of image
 class MoviesListCollectionViewCell: UICollectionViewCell {
+    static let identifier = "MoviesListCollectionViewCell"
     var my_movie : Movie?
     
     let ratingAttachment = NSTextAttachment()
     var posterImage : UIImage?
     var posterView = UIImageView()
-    var posterPath : String?
+    var posterURL : URL?
     var rating : Double?
     var ratingLabel = UILabel()
     var titleLabel = UILabel()
     
-    override var reuseIdentifier: String? {
+    override var reuseIdentifier: String{
         return "MoviesListCollectionViewCell"
     }
     
     override init(frame: CGRect){
         super.init(frame: .zero)
+        self.contentView.backgroundColor = .white
         self.contentView.addSubview(posterView)
         //self.contentView.addSubview(ratingLabel)
         self.contentView.addSubview(titleLabel)
-        
         configureImage()
         configureTitle()
     }
@@ -43,13 +44,13 @@ class MoviesListCollectionViewCell: UICollectionViewCell {
     
     func configureMovie(_ movie: Movie){
         self.my_movie = movie
-        self.posterPath = movie.posterPath
+        self.posterURL = URL(string: "https://image.tmdb.org/t/p/w185\(movie.posterPath ?? "")")!
         self.rating = movie.voteAverage
         self.titleLabel.text = movie.title
     }
     
     func configureImage(){
-        load(url: self.my_movie!.posterURL)
+        self.load(url: (self.posterURL ?? URL(string: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/AeyiuQUUs78bPkz18FY3AzNFF8b.jpg"))!)
         self.posterView.image = self.posterImage
         self.posterView.translatesAutoresizingMaskIntoConstraints = false
         self.posterView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true

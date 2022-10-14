@@ -14,15 +14,16 @@ struct MovieResponse : Decodable {
 struct Movie : Decodable {
     let id: Int
     let title: String
-    let backdropPath: String?
     let posterPath: String?
     let overview: String
     let voteAverage: Double
-    let voteCount: Int
     let runtime: Int?
     
-    var posterURL: URL{
-        //TODO: fix
-        return URL(string: "https://image.tmdb.org/t/p/w185\(posterPath ?? "")")!
-    }
+    //question: is it okay to have keys that json does not give?
+    
+    //var liked: Bool = false
+    
+    //var posterURL: URL{
+        //return URL(string: "https://image.tmdb.org/t/p/w185\(posterPath ?? "")")!
+    //}
 }

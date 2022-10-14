@@ -9,9 +9,11 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     
     private let defaults = UserDefaults.standard
+    private var endPoint = MovieListEndPoint.popular
+    private var endPointState = MovieListState()
     
     private let item: CustomTabItem
     let titleLabel = UILabel()
@@ -19,15 +21,18 @@ class HomeViewController: UIViewController {
     let profilePic = UIButton()
     let searchBar = UISearchBar()
     //let categoryStack = CategoryStackView()
+    //change it into a collection view?
     let categoryStack = UIView()
     let categoryLabel = UILabel()
     
     var codeSegmented = CustomSegmentedControl(buttonTitle: ["Popular","Top Rated"])
     
-   // var filterButton = UISegmentedControl(items: ["Popular", "What's New?"])
     let recentButton = UIButton()
     let popularButton = UIButton()
-    let movieListView = UICollectionView(frame: .zero)
+    //let movieListView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout.init())
+    var movieListView: UICollectionView!
+    let layout = UICollectionViewFlowLayout()
+   // let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
     
     init(item: CustomTabItem) {
             self.item = item
@@ -41,6 +46,8 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        self.endPointState.loadMovies(with: .popular)
         self.view.backgroundColor = Styles.backgroundBlue
         self.view.addSubview(titleLabel)
         self.view.addSubview(headerLabel)
@@ -49,6 +56,8 @@ class HomeViewController: UIViewController {
         self.view.addSubview(categoryLabel)
         self.view.addSubview(categoryStack)
         self.view.addSubview(codeSegmented)
+        movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        self.movieListView.register(MoviesListCollectionViewCell.self, forCellWithReuseIdentifier: MoviesListCollectionViewCell.identifier)
         self.view.addSubview(movieListView)
         
         configureHeader()
@@ -56,9 +65,44 @@ class HomeViewController: UIViewController {
         configureCategoryStack()
         configureSegmentedControl()
         configureMovieList()
-        //question: how to set size for frame that hasn't been defined yet?
-        // Do any additional setup after loading the view.
     }
+    
+    
+    func configureMovieList(){
+        layout.scrollDirection = .vertical
+        movieListView.setCollectionViewLayout(layout, animated: true)
+        movieListView.dataSource = self
+        movieListView.delegate = self
+        movieListView.backgroundColor = .clear
+        movieListView.translatesAutoresizingMaskIntoConstraints = false
+        movieListView.topAnchor.constraint(equalTo: self.codeSegmented.bottomAnchor, constant: 10).isActive = true
+        movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width/2.5, height: 150)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.endPointState.movies?.count ?? 10
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let VC = MovieDetailViewController()
+        self.navigationController?.pushViewController(VC, animated: true)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviesListCollectionViewCell.identifier, for: indexPath) as! MoviesListCollectionViewCell
+        guard let movie = endPointState.movies?[indexPath.row] else { return UICollectionViewCell() }
+        cell.configureMovie(movie)
+        return cell
+    }
+}
+
+extension HomeViewController {
     
     func configureHeader(){
         self.titleLabel.text = "Welcome User! 👋"
@@ -107,35 +151,17 @@ class HomeViewController: UIViewController {
         self.categoryLabel.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 25).isActive = true
     }
     
-   func configureCategoryStack(){
-        self.categoryStack.translatesAutoresizingMaskIntoConstraints = false
-        self.categoryStack.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
-        self.categoryStack.topAnchor.constraint(equalTo: self.categoryLabel.bottomAnchor, constant: 8).isActive = true
-       self.categoryStack.heightAnchor.constraint(equalToConstant: 50).isActive = true
-       self.categoryStack.widthAnchor.constraint(equalToConstant: self.view.frame.width-48).isActive = true
-       self.categoryStack.backgroundColor = .clear
-    }
+    func configureCategoryStack(){
+         self.categoryStack.translatesAutoresizingMaskIntoConstraints = false
+         self.categoryStack.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
+         self.categoryStack.topAnchor.constraint(equalTo: self.categoryLabel.bottomAnchor, constant: 8).isActive = true
+        self.categoryStack.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.categoryStack.widthAnchor.constraint(equalToConstant: self.view.frame.width-48).isActive = true
+        self.categoryStack.backgroundColor = .clear
+     }
     
     //view switch with segmeneted control
     func configureSegmentedControl(){
-    
-        //filterButton = UISegmentedControl(items: ["Popular", "What's New?"])
-        /*
-        self.filterButton.translatesAutoresizingMaskIntoConstraints = false
-        self.filterButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
-        self.filterButton.topAnchor.constraint(equalTo: self.categoryStack.bottomAnchor, constant: 25).isActive = true
-        self.filterButton.addTarget(self, action: #selector(didTapChangeFilter), for: .valueChanged)
-        self.filterButton.backgroundColor = .clear
-        let unselectedAttributes = [NSAttributedString.Key.foregroundColor: Styles.darkGrey,
-                                    NSAttributedString.Key.backgroundColor: UIColor.clear,
-                                    NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
-        
-        let selectedAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white,
-                                  NSAttributedString.Key.backgroundColor : UIColor.clear,
-                                  NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
-        
-        self.filterButton.setTitleTextAttributes(unselectedAttributes, for: .normal)
-        self.filterButton.setTitleTextAttributes(selectedAttributes, for: .selected)*/
         codeSegmented.backgroundColor = .clear
         self.codeSegmented.translatesAutoresizingMaskIntoConstraints = false
         self.codeSegmented.topAnchor.constraint(equalTo: self.categoryStack.bottomAnchor, constant: 25).isActive = true
@@ -145,42 +171,19 @@ class HomeViewController: UIViewController {
     }
     
     @objc func didTapChangeFilter(){
-        //TODO: change this to post notification 
-        print("changed Items!")
-    }
-    
-    func configureMovieList(){
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        movieListView.collectionViewLayout = layout
-        movieListView.dataSource = self
-        movieListView.delegate = self
-        movieListView.backgroundColor = .clear
-        movieListView.topAnchor.constraint(equalTo: self.codeSegmented.bottomAnchor, constant: 10).isActive = true
-        movieListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
-        movieListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -24).isActive = true
-        movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        if (codeSegmented.selectedIndex == 0){
+            self.endPoint = MovieListEndPoint.popular
+        }else if (codeSegmented.selectedIndex == 1){
+            self.endPoint = MovieListEndPoint.topRated
+        }
         
-        
+        self.endPointState.loadMovies(with: self.endPoint)
+        self.movieListView.reloadData()
     }
-    
 }
 
-extension HomeViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width/2.5, height: 150)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MoviesListCollectionViewCell", for: indexPath) as? MoviesListCollectionViewCell else { return UICollectionViewCell() }
-        cell.configureMovie(<#T##movie: Movie##Movie#>)
-        return cell
-    }
+
     
     
    
-}
+

@@ -5,7 +5,6 @@
 //  Created by grace kim  on 2022/10/08.
 //
 
-//TODO: make the phone turn automatically into dark mode?
 
 import UIKit
 
@@ -76,23 +75,24 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         movieListView.backgroundColor = .clear
         movieListView.translatesAutoresizingMaskIntoConstraints = false
         movieListView.topAnchor.constraint(equalTo: self.codeSegmented.bottomAnchor, constant: 10).isActive = true
-        movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 24).isActive = true
+        movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
         movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width/2.5, height: 150)
+        return CGSize(width: collectionView.frame.width/2.2, height: 200)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.endPointState.movies?.count ?? 10
+        return self.endPointState.movies?.count ?? 20
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let VC = MovieDetailViewController()
+        let VC = MovieDetailViewController(movie: (endPointState.movies?[indexPath.item])!)
         self.navigationController?.pushViewController(VC, animated: true)
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviesListCollectionViewCell.identifier, for: indexPath) as! MoviesListCollectionViewCell

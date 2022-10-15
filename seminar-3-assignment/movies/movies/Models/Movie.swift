@@ -9,6 +9,10 @@ import Foundation
 
 struct MovieResponse : Decodable {
     let results : [Movie]
+    
+    private enum CodkingKeys: String, CodingKey {
+        case results
+    }
 }
 
 struct Movie : Decodable {
@@ -17,13 +21,9 @@ struct Movie : Decodable {
     let posterPath: String?
     let overview: String
     let voteAverage: Double
-    let runtime: Int?
     
-    //question: is it okay to have keys that json does not give?
-    
-    //var liked: Bool = false
-    
-    //var posterURL: URL{
-        //return URL(string: "https://image.tmdb.org/t/p/w185\(posterPath ?? "")")!
-    //}
+    private enum CodingKeys: String, CodingKey {
+        case id, title = "original_title", posterPath = "poster_path", overview, voteAverage = "vote_average"
+    }
 }
+    

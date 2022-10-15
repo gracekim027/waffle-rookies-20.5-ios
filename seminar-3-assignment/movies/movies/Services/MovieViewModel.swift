@@ -8,8 +8,9 @@
 //search doesn't have filter with
 
 import Foundation
+import RxSwift
 
-class MovieViewModel: MovieService {
+class MovieViewModel {
     
     private init() {}
     
@@ -18,33 +19,84 @@ class MovieViewModel: MovieService {
     private let baseAPIURL = "https://api.themoviedb.org/3"
     private let urlSession = URLSession.shared
     private var page : Int = 1
-    var result : MovieResponse?
     
     //for when popular & top_rated
-    func fetchMovies(from endpoint: MovieListEndPoint, completion: @escaping (Result<MovieResponse, MovieError>) -> ()) {
-        guard let url = URL(string: "\(baseAPIURL)/movie/\(endpoint.rawValue)?/api_key=\(apiKey)&language=en-US&page=\(page)") else {
+    func fetchMovies(from endpoint: MovieListEndPoint, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
+        
+        guard let url = URL(string: "\(baseAPIURL)/movie/\(endpoint.rawValue)?api_key=\(apiKey)&language=en-US&page=\(page)")  else {
             completion(.failure(.invalidEndPoint))
+            print("url error")
             return
         }
-        self.loadURLAndDecode(url: url, completion: completion)
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        guard error == nil else {
+            print("something went wrong")
+            return }
+        guard let data = data else {
+            return
+        }
+        do {
+            let results : MovieResponse = try JSONDecoder().decode(MovieResponse.self, from: data)
+            completion(.success(results))
+        } catch {
+            print(String(describing: error))
+        }
+        }
+        task.resume()
     }
     
-    //for when detail view
-    func fetchMovie(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ()) {
+    func fetchMovie(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ()){
+        
         guard let url = URL(string: "\(baseAPIURL)/movie/\(id)?/api_key=\(apiKey)&language=en-US") else {
             completion(.failure(.invalidEndPoint))
             return
         }
-        self.loadURLAndDecode(url: url, completion: completion)
-    }
-    
-    //for when search bar tapped
-    func searchMovie(query: String, completion: @escaping (Result<MovieResponse, MovieError>) -> ()) {
-        guard let url = URL(string: "\(baseAPIURL)/search/movie?api_key=\(apiKey)&language=en-US&query=\(query)&page=\(page)&include_adult = false") else {
-            completion(.failure(.invalidEndPoint))
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        guard error == nil else {
+            print("something went wrong")
+            return }
+        guard let data = data else {
             return
         }
-        self.loadURLAndDecode(url: url, completion: completion)
+        do {
+            let result : Movie = try JSONDecoder().decode(Movie.self, from: data)
+            completion(.success(result))
+            print(result.title)
+            
+        } catch {
+            print(url)
+            print(String(describing: error))
+        }
+        }
+        task.resume()
+    }
+    
+      
+    //for when search bar tapped
+    func searchMovie(from query: String, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
+        guard let url = URL(string: "\(baseAPIURL)/search/movie?api_key=\(apiKey)&language=en-US&query=\(query)&page=\(page)&include_adult = false") else {
+            completion(.failure(.invalidEndPoint))
+            print("url error!")
+            return
+        }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        guard error == nil else {
+            print("something went wrong")
+            return }
+        guard let data = data else {
+            return
+        }
+        do {
+            let result : MovieResponse = try JSONDecoder().decode(MovieResponse.self, from: data)
+            completion(.success(result))
+            print(result.results[0].title)
+        } catch {
+            print(String(describing: error))
+        }
+        }
+        task.resume()
     }
     
     //one page has 20 results --> show 40 initially

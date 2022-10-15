@@ -45,6 +45,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        GenreListState.shared.loadGenres()
         self.endPointState.loadMovies(with: .popular)
         self.view.backgroundColor = Styles.backgroundBlue
         self.view.addSubview(titleLabel)
@@ -78,6 +79,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         layout.scrollDirection = .vertical
         movieListView.setCollectionViewLayout(layout, animated: true)
         movieListView.dataSource = self
+        movieListView.showsVerticalScrollIndicator = false
         movieListView.delegate = self
         movieListView.backgroundColor = .clear
         movieListView.translatesAutoresizingMaskIntoConstraints = false

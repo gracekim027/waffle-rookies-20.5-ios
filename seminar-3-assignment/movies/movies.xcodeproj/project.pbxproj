@@ -24,6 +24,8 @@
 		6549047828F2EEAD00CC7C9A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549047728F2EEAD00CC7C9A /* Utils.swift */; };
 		655F7E7128F9A08B00A2FE79 /* MovieDetailState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655F7E7028F9A08B00A2FE79 /* MovieDetailState.swift */; };
 		655F7E7528F9A55C00A2FE79 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655F7E7428F9A55C00A2FE79 /* MovieDetailViewController.swift */; };
+		6564D16828FA935400ADC6E1 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6564D16728FA935400ADC6E1 /* Genre.swift */; };
+		6564D16A28FA946800ADC6E1 /* GenreListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6564D16928FA946800ADC6E1 /* GenreListState.swift */; };
 		65677BBB28F17D5C001885BF /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65677BBA28F17D5C001885BF /* HomeViewController.swift */; };
 		65677BBD28F17D65001885BF /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65677BBC28F17D65001885BF /* FavoritesViewController.swift */; };
 		65677BBF28F17D90001885BF /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65677BBE28F17D90001885BF /* Styles.swift */; };
@@ -51,6 +53,8 @@
 		6549047728F2EEAD00CC7C9A /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		655F7E7028F9A08B00A2FE79 /* MovieDetailState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailState.swift; sourceTree = "<group>"; };
 		655F7E7428F9A55C00A2FE79 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
+		6564D16728FA935400ADC6E1 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
+		6564D16928FA946800ADC6E1 /* GenreListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreListState.swift; sourceTree = "<group>"; };
 		65677BBA28F17D5C001885BF /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		65677BBC28F17D65001885BF /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		65677BBE28F17D90001885BF /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
@@ -135,6 +139,7 @@
 				65677BBE28F17D90001885BF /* Styles.swift */,
 				6549047728F2EEAD00CC7C9A /* Utils.swift */,
 				6549046F28F2DFA300CC7C9A /* Movie.swift */,
+				6564D16728FA935400ADC6E1 /* Genre.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -181,6 +186,7 @@
 			children = (
 				65CFCFFB28F5A80D00D3146F /* MovieListState.swift */,
 				655F7E7028F9A08B00A2FE79 /* MovieDetailState.swift */,
+				6564D16928FA946800ADC6E1 /* GenreListState.swift */,
 			);
 			path = Bindings;
 			sourceTree = "<group>";
@@ -331,6 +337,7 @@
 				6549047028F2DFA300CC7C9A /* Movie.swift in Sources */,
 				6549047528F2EBE500CC7C9A /* MovieViewModel.swift in Sources */,
 				6549046228F28B2600CC7C9A /* CustomTabBar.swift in Sources */,
+				6564D16828FA935400ADC6E1 /* Genre.swift in Sources */,
 				655F7E7128F9A08B00A2FE79 /* MovieDetailState.swift in Sources */,
 				65D238D128F140F5004F35BE /* AppDelegate.swift in Sources */,
 				6549046D28F2920B00CC7C9A /* CustomSegmentedControll.swift in Sources */,
@@ -343,6 +350,7 @@
 				6549046828F28B9800CC7C9A /* Extensions.swift in Sources */,
 				65677BBF28F17D90001885BF /* Styles.swift in Sources */,
 				6549047828F2EEAD00CC7C9A /* Utils.swift in Sources */,
+				6564D16A28FA946800ADC6E1 /* GenreListState.swift in Sources */,
 				65677BBD28F17D65001885BF /* FavoritesViewController.swift in Sources */,
 				65677BBB28F17D5C001885BF /* HomeViewController.swift in Sources */,
 			);

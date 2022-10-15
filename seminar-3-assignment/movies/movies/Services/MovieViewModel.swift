@@ -99,6 +99,31 @@ class MovieViewModel {
         task.resume()
     }
     
+    func getGenreList(completion: @escaping (Result<GenreDict, MovieError>) -> ()){
+        guard let url = URL(string:
+                                "https://api.themoviedb.org/3/genre/movie/list?api_key=\(apiKey)&language=en-US") else {
+            completion(.failure(.invalidEndPoint))
+            print("genre url error")
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        guard error == nil else {
+            print("something went wrong in genre")
+            return }
+        guard let data = data else {
+            return
+        }
+        do {
+            let result : GenreDict = try JSONDecoder().decode(GenreDict.self, from: data)
+            completion(.success(result))
+        } catch {
+            print(String(describing: error))
+        }
+        }
+        task.resume()
+    }
+    
     //one page has 20 results --> show 40 initially
     private func loadURLAndDecode<D: Decodable>(url: URL, completion: @escaping (Result<D, MovieError>) -> ()){
         urlSession.dataTask(with: url) { [weak self] (data, response, error) in

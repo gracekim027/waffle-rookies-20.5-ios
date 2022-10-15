@@ -45,7 +45,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
         self.endPointState.loadMovies(with: .popular)
         self.view.backgroundColor = Styles.backgroundBlue
         self.view.addSubview(titleLabel)
@@ -66,6 +65,14 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         configureMovieList()
     }
     
+    @objc func didTapGoBack(){
+        
+    }
+    
+    @objc func didTapLike(){
+        
+    }
+    
     
     func configureMovieList(){
         layout.scrollDirection = .vertical
@@ -81,7 +88,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width/2.2, height: 200)
+        return CGSize(width: (collectionView.frame.width-24)/2, height: 250)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

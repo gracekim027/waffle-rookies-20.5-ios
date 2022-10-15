@@ -21,6 +21,7 @@ struct Movie : Decodable {
     let posterPath: String?
     let overview: String
     let voteAverage: Double
+    let liked = false
     
     private enum CodingKeys: String, CodingKey {
         case id, title = "original_title", posterPath = "poster_path", overview, voteAverage = "vote_average"

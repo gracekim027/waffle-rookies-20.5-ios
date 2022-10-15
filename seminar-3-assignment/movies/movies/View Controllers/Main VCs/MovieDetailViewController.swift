@@ -29,6 +29,16 @@ class MovieDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let backButton = UIButton()
+        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        let back = UIBarButtonItem(customView: backButton)
+        let likeButton = UIButton()
+        likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+        let like = UIBarButtonItem(customView: likeButton)
+        self.navigationItem.leftBarButtonItem = back
+        self.navigationItem.rightBarButtonItem = like
+        
         self.view.backgroundColor = Styles.backgroundBlue
         self.view.addSubview(posterView)
         self.view.addSubview(titleLabel)

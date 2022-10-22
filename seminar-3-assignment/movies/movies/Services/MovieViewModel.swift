@@ -8,7 +8,11 @@
 //search doesn't have filter with
 
 import Foundation
-import RxSwift
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
+var semaphore = DispatchSemaphore (value: 0)
 
 class MovieViewModel {
     
@@ -18,12 +22,15 @@ class MovieViewModel {
     private let apiKey = "f330b07acf479c98b184db47a4d2608b"
     private let baseAPIURL = "https://api.themoviedb.org/3"
     private let urlSession = URLSession.shared
-    private var page : Int = 1
+    var page : Int = 1
+    
     
     //for when popular & top_rated
-    func fetchMovies(from endpoint: MovieListEndPoint, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
+    func fetchMovies(from endpoint: MovieListEndPoint, pageNum: Int, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
+        self.page = pageNum
         
-        guard let url = URL(string: "\(baseAPIURL)/movie/\(endpoint.rawValue)?api_key=\(apiKey)&language=en-US&page=\(page)")  else {
+        let URLString = "\(baseAPIURL)/movie/\(endpoint.rawValue)?api_key=\(apiKey)&language=en-US&page=\(page)"
+        guard let url = URL(string: URLString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)  else {
             completion(.failure(.invalidEndPoint))
             print("url error")
             return
@@ -34,16 +41,21 @@ class MovieViewModel {
             print("something went wrong")
             return }
         guard let data = data else {
+            semaphore.signal()
             return
         }
         do {
+            //print("point 3")
             let results : MovieResponse = try JSONDecoder().decode(MovieResponse.self, from: data)
+            //print(results.results[0].title) --> 여기까지됨.
             completion(.success(results))
-        } catch {
-            print(String(describing: error))
+            semaphore.signal()
+            } catch {
+            print(error.localizedDescription)
         }
         }
         task.resume()
+        semaphore.wait()
     }
     
     func fetchMovie(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ()){
@@ -62,7 +74,10 @@ class MovieViewModel {
         }
         do {
             let result : Movie = try JSONDecoder().decode(Movie.self, from: data)
+            DispatchQueue.main.async() {
             completion(.success(result))
+                }
+           
             print(result.title)
             
         } catch {
@@ -112,19 +127,22 @@ class MovieViewModel {
             print("something went wrong in genre")
             return }
         guard let data = data else {
+            semaphore.signal()
             return
         }
         do {
+            //print("point 4")
             let result : GenreDict = try JSONDecoder().decode(GenreDict.self, from: data)
             completion(.success(result))
+            semaphore.signal()
         } catch {
             print(String(describing: error))
         }
         }
         task.resume()
+        semaphore.wait()
     }
     
-    //one page has 20 results --> show 40 initially
     private func loadURLAndDecode<D: Decodable>(url: URL, completion: @escaping (Result<D, MovieError>) -> ()){
         urlSession.dataTask(with: url) { [weak self] (data, response, error) in
             guard let self = self else {return}
@@ -157,5 +175,5 @@ class MovieViewModel {
             completion(result)
         }
     }
-    
+
 }

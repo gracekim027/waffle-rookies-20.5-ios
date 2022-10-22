@@ -7,20 +7,26 @@
 
 import UIKit
 import Foundation
+import RxSwift
 
 class MovieListState {
     
     static var shared = MovieListState()
     var movies: [Movie]?
+    //question: where to put the page num?
     var error : Error?
+    var page : Int = 1
     
     func loadMovies(with endpoint: MovieListEndPoint) {
-        MovieViewModel.shared.fetchMovies(from: endpoint) { [weak self] (result) in
+        //initial load movies (without pagination)
+        self.movies = nil
+        MovieViewModel.shared.fetchMovies(from: endpoint, pageNum: self.page) { [weak self] (result) in
         guard let self = self else { return }
         switch result {
         case .success(let response):
             self.movies = response.results
         case .failure(let error):
+            print("error in loading movies")
             self.error = error as NSError
         }
     }
@@ -39,5 +45,25 @@ class MovieListState {
             self.error = error as NSError
         }
     }
+    }
+    
+    func appendMovies(with endPoint: MovieListEndPoint){
+        self.page = self.page + 1
+        MovieViewModel.shared.fetchMovies(from: endPoint, pageNum: self.page) { [weak self] (result) in
+        guard let self = self else { return }
+        switch result {
+        case .success(let response):
+            self.movies! += response.results
+        case .failure(let error):
+            print("error in loading movies")
+            self.error = error as NSError
+        }
+    }
+        
+    }
+    
+    func initParams(){
+        self.page = 1;
+        self.movies = nil
     }
 }

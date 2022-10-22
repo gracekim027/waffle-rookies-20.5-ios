@@ -14,7 +14,7 @@ protocol CustomSegmentedControlDelegate:AnyObject {
 
 class CustomSegmentedControl: UIView {
     private var buttonTitles:[String]!
-    private var buttons: [UIButton]!
+    var buttons: [UIButton]!
     private var selectorView: UIView!
     
     var textColor:UIColor = Styles.darkGrey
@@ -56,6 +56,7 @@ class CustomSegmentedControl: UIView {
         for (buttonIndex, btn) in buttons.enumerated() {
             btn.setTitleColor(textColor, for: .normal)
             if btn == sender {
+                NotificationCenter.default.post(name: NSNotification.Name("changedFilter"), object: nil)
                 let selectorPosition = frame.width/CGFloat(buttonTitles.count) * CGFloat(buttonIndex)
                 selectedIndex = buttonIndex
                 delegate?.change(to: selectedIndex)

@@ -9,14 +9,15 @@ import UIKit
 
 ///cell used for list views --> has movie poster, title, and rating on top of image
 class MoviesListCollectionViewCell: UICollectionViewCell {
-    static let identifier = "MoviesListCollectionViewCell"
+   // static let identifier = "MoviesListCollectionViewCell"
     var my_movie : Movie?
     var posterView = UIImageView()
     var ratingLabel = UILabel()
     var titleLabel = UILabel()
     //question: difference of using var and let in cell?
     
-    override var reuseIdentifier: String{
+    
+    override var reuseIdentifier: String {
         return "MoviesListCollectionViewCell"
     }
     
@@ -27,7 +28,7 @@ class MoviesListCollectionViewCell: UICollectionViewCell {
         self.contentView.addSubview(ratingLabel)
         self.contentView.addSubview(titleLabel)
         configureImage()
-       // configureTitle()
+        configureTitle()
     }
     
     required init?(coder: NSCoder) {
@@ -68,25 +69,16 @@ class MoviesListCollectionViewCell: UICollectionViewCell {
         ratingLabel.topAnchor.constraint(equalTo: self.posterView.topAnchor, constant: 7).isActive = true
         ratingLabel.leadingAnchor.constraint(equalTo: self.posterView.leadingAnchor, constant: 7).isActive = true
         ratingLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 25).isActive = true
-        
-        self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
-        self.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
-        self.widthAnchor.constraint(equalToConstant: self.contentView.frame.width).isActive = true
-        self.titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        self.titleLabel.textColor = .white
-        self.titleLabel.numberOfLines = 1
-        self.titleLabel.adjustsFontSizeToFitWidth = true
     }
-    
     
     func configureTitle(){
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
-        self.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
-        self.widthAnchor.constraint(equalToConstant: self.contentView.frame.width).isActive = true
-        self.titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        self.titleLabel.topAnchor.constraint(equalTo: self.posterView.bottomAnchor, constant: 5).isActive = true
+        self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
+        self.titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
+        self.titleLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         self.titleLabel.textColor = .white
+        self.titleLabel.textAlignment = .center
         self.titleLabel.numberOfLines = 1
         self.titleLabel.adjustsFontSizeToFitWidth = true
     }

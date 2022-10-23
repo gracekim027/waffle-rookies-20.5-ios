@@ -13,6 +13,7 @@ class MovieDetailViewController: UIViewController {
 
     var posterView = UIImageView()
     
+    
     var titleLabel = UILabel()
     
     var icon = UIImageView()
@@ -52,19 +53,21 @@ class MovieDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "Movie Details"
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-        let backButton = UIButton()
-        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        let back = UIBarButtonItem(customView: backButton)
+       // let backButton = UIButton()
+       // backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+       // let back = UIBarButtonItem(customView: backButton)
         let likeButton = UIButton()
         likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+        likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
         let like = UIBarButtonItem(customView: likeButton)
         //self.navigationItem.leftBarButtonItem = back
-        self.navigationItem.setLeftBarButton(back, animated: true)
+       // self.navigationItem.setLeftBarButton(back, animated: true)
         self.navigationItem.setRightBarButton(like, animated: true)
-        //self..navigationItem.rightBarButtonItem = like
-        
+        //TODO: add padding and change back button design and color to white
+        //TODO: fix rating labels 
         self.view.backgroundColor = Styles.backgroundBlue
         
         self.view.addSubview(posterView)
@@ -80,6 +83,18 @@ class MovieDetailViewController: UIViewController {
         configurePosterView()
         configureSubLabels()
         configureSummary()
+    }
+    
+    @objc func didTapLike(){
+        if (self.my_movie.liked == false){
+            //adding to liked movie list
+            self.my_movie.liked = true
+            NotificationCenter.default.post(name: NSNotification.Name("didTapLike"), object: nil, userInfo: ["movie": self.my_movie])
+        }else {
+            //removing from liked movie list
+            self.my_movie.liked = false
+            NotificationCenter.default.post(name: NSNotification.Name("didTapNotLike"), object: nil, userInfo: ["movie": self.my_movie])
+        }
     }
     
     func configurePosterView(){

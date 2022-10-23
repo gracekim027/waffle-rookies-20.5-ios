@@ -81,8 +81,8 @@ extension CustomSegmentedControl {
         let stack = UIStackView(arrangedSubviews: buttons)
         stack.axis = .horizontal
         stack.alignment = .leading
-        stack.distribution = .equalCentering
-        stack.spacing = 20
+        stack.distribution = .fillProportionally
+        stack.spacing = 2
         addSubview(stack)
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.topAnchor.constraint(equalTo: self.topAnchor).isActive = true

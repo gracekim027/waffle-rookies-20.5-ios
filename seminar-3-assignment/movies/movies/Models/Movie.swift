@@ -22,7 +22,7 @@ struct Movie : Decodable {
     let overview: String
     let voteAverage: Double
     let releaseDate : String
-    let liked = false
+    var liked = false
     let genreIDs : [Int]
     
     private enum CodingKeys: String, CodingKey {

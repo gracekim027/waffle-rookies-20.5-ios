@@ -25,8 +25,8 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     let searchBar = UISearchBar()
     //let categoryStack = CategoryStackView()
     //change it into a collection view?
-    let categoryStack = UIView()
-    let categoryLabel = UILabel()
+   // let categoryStack = UIView()
+   // let categoryLabel = UILabel()
     
     var codeSegmented = CustomSegmentedControl(buttonTitle: ["Popular","Top Rated"])
     
@@ -61,8 +61,8 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         self.view.addSubview(headerLabel)
         self.view.addSubview(profilePic)
         self.view.addSubview(searchBar)
-        self.view.addSubview(categoryLabel)
-        self.view.addSubview(categoryStack)
+        //self.view.addSubview(categoryLabel)
+        //self.view.addSubview(categoryStack)
         self.view.addSubview(codeSegmented)
         movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.movieListView.register(MoviesListCollectionViewCell.self, forCellWithReuseIdentifier: "MoviesListCollectionViewCell")
@@ -70,18 +70,12 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         
         configureHeader()
         configureSearchBar()
-        configureCategoryStack()
+       // configureCategoryStack()
         configureSegmentedControl()
         configureMovieList()
     }
     
-    @objc func didTapGoBack(){
-        
-    }
     
-    @objc func didTapLike(){
-        
-    }
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -113,10 +107,11 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         movieListView.delegate = self
         movieListView.backgroundColor = .clear
         movieListView.translatesAutoresizingMaskIntoConstraints = false
-        movieListView.topAnchor.constraint(equalTo: self.codeSegmented.bottomAnchor, constant: 10).isActive = true
+        movieListView.topAnchor.constraint(equalTo: self.codeSegmented.bottomAnchor, constant: 20).isActive = true
         movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 24).isActive = true
         movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
         movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        //TODO: add shadow,, scrolling looks hella ugly
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -176,32 +171,18 @@ extension HomeViewController {
         self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
         self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,constant: -24).isActive = true
         self.searchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        
-        self.categoryLabel.text = "Category"
-        self.categoryLabel.textColor = .white
-        self.categoryLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        self.categoryLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.categoryLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
-        self.categoryLabel.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 25).isActive = true
+
     }
     
-    func configureCategoryStack(){
-         self.categoryStack.translatesAutoresizingMaskIntoConstraints = false
-         self.categoryStack.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
-         self.categoryStack.topAnchor.constraint(equalTo: self.categoryLabel.bottomAnchor, constant: 8).isActive = true
-        self.categoryStack.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        self.categoryStack.widthAnchor.constraint(equalToConstant: self.view.frame.width-48).isActive = true
-        self.categoryStack.backgroundColor = .clear
-     }
+
     
     //view switch with segmeneted control
     func configureSegmentedControl(){
         //need to add target to segmented control
         codeSegmented.backgroundColor = .clear
         self.codeSegmented.translatesAutoresizingMaskIntoConstraints = false
-        self.codeSegmented.topAnchor.constraint(equalTo: self.categoryStack.bottomAnchor, constant: 25).isActive = true
-        self.codeSegmented.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
+        self.codeSegmented.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 25).isActive = true
+        self.codeSegmented.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25).isActive = true
         self.codeSegmented.heightAnchor.constraint(equalToConstant: 23).isActive = true
         self.codeSegmented.widthAnchor.constraint(greaterThanOrEqualToConstant: 180).isActive = true
         NotificationCenter.default.addObserver(forName: Notification.Name("changedFilter"), object: nil, queue: nil, using: didTapChangeFilter)

@@ -7,5 +7,6 @@ target 'movies' do
 
   # Pods for movies
 
-
+pod 'RxSwift'
+pod 'RxCocoa' 
 end

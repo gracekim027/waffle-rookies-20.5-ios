@@ -42,7 +42,7 @@ class MovieDetailViewController: UIViewController {
         self.my_movie = movie
         let posterURL = URL(string: "https://image.tmdb.org/t/p/original\(movie.posterPath ?? "")")!
         self.posterView.load(url: posterURL)
-        self.realRating.text = "\(my_movie.voteAverage)"
+        self.realRating.text = "\(my_movie.voteAverage) / 10"
         self.rating.text = "Rating"
         self.titleLabel.text = movie.title
         let genreCode = movie.genreIDs[0]
@@ -211,7 +211,7 @@ class MovieDetailViewController: UIViewController {
         icon2.layer.masksToBounds = true
         
         relaseYear.textColor = Styles.fontGrey
-        relaseYear.text = "Release Date"
+        relaseYear.text = "Release Year"
         relaseYear.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         relaseYear.translatesAutoresizingMaskIntoConstraints = false
         relaseYear.centerXAnchor.constraint(equalTo: self.yearView.centerXAnchor).isActive = true

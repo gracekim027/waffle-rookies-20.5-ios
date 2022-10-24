@@ -7,16 +7,18 @@
 
 
 import UIKit
+import RxSwift
 
-class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
+
+class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout{
     
-
+    private let bag = DisposeBag()
+    
     private let defaults = UserDefaults.standard
     private var endPoint = MovieListEndPoint.popular
-    private var endPointState = MovieListState.shared
+    var endPointState = MovieListState.shared
     
-    //private var dataSource = Observable<[String]>.of((1...30).map(String.init))
-    //private var dataSource = Observable<[Movie]>.of(endPointState)
+
     
     private let item: CustomTabItem
     let titleLabel = UILabel()
@@ -32,6 +34,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     var movieListView: UICollectionView!
     let layout = UICollectionViewFlowLayout()
     
+    
     init(item: CustomTabItem) {
             self.item = item
             super.init(nibName: nil, bundle: nil)
@@ -43,12 +46,11 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
 
     override func viewDidLoad() {
         
-        
         super.viewDidLoad()
         endPointState.loadMovies(with: endPoint)
-        print(endPointState.movies?[0].title)
+        //print(endPointState.movies[0].title)
         GenreListState.shared.loadGenres()
-        print(GenreListState.shared.genres?[0].name)
+        //print(GenreListState.shared.genres?[0].name)
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.view.backgroundColor = Styles.backgroundBlue
@@ -61,24 +63,44 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         self.view.addSubview(codeSegmented)
         movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.movieListView.register(MoviesListCollectionViewCell.self, forCellWithReuseIdentifier: "MoviesListCollectionViewCell")
+        bind()
         self.view.addSubview(movieListView)
         
         configureHeader()
         configureSearchBar()
-       // configureCategoryStack()
         configureSegmentedControl()
         configureMovieList()
     }
     
     
-    
-    
+    /*
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MoviesListCollectionViewCell", for: indexPath) as! MoviesListCollectionViewCell
         
-        guard let movie = self.endPointState.movies?[indexPath.row] else { return UICollectionViewCell() }
+        guard let movie = self.endPointState.movies[indexPath.row] else { return UICollectionViewCell() }
         cell.configureMovie(movie)
         return cell
+    }*/
+    
+    func bind(){
+        movieListView.rx.setDelegate(self)
+            .disposed(by: bag)
+        let moviesObservable = self.endPointState.getObservable()
+        
+        //let moviesObservable = self.endPointState.getObservable()
+        //moviesObservable.retry()
+        moviesObservable
+            .bind(to: movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in
+                cell.configureMovie(movie)
+            }
+            .disposed(by: bag)
+        
+        movieListView.rx.itemSelected
+            .subscribe(onNext: { index in
+                let VC = MovieDetailViewController(movie: (self.endPointState.movies[index.item]))
+                self.navigationController?.pushViewController(VC, animated: true)
+            })
+            .disposed(by: bag)
     }
     
     //pagination
@@ -87,19 +109,19 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
 
         if offsetY > (self.movieListView.contentSize.height - 100 - scrollView.frame.size.height){
             self.endPointState.appendMovies(with: self.endPoint)
+           
             DispatchQueue.main.async {
-                self.movieListView.reloadData()
+                //self.bind()
             }
             }
     }
     
-    
     func configureMovieList(){
         layout.scrollDirection = .vertical
         movieListView.setCollectionViewLayout(layout, animated: true)
-        movieListView.dataSource = self
+        //movieListView.dataSource = self
         movieListView.showsVerticalScrollIndicator = false
-        movieListView.delegate = self
+        //movieListView.delegate = self
         movieListView.backgroundColor = .clear
         movieListView.translatesAutoresizingMaskIntoConstraints = false
         movieListView.topAnchor.constraint(equalTo: self.codeSegmented.bottomAnchor, constant: 20).isActive = true
@@ -114,13 +136,14 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.endPointState.movies?.count ?? 20
+        return self.endPointState.movies.count
     }
     
+    /*
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let VC = MovieDetailViewController(movie: (endPointState.movies?[indexPath.item])!)
+        let VC = MovieDetailViewController(movie: (endPointState.movies[indexPath.item]))
         self.navigationController?.pushViewController(VC, animated: true)
-    }
+    }*/
     
     
 }
@@ -168,7 +191,6 @@ extension HomeViewController {
     }
     
 
-    
     //view switch with segmeneted control
     func configureSegmentedControl(){
         //need to add target to segmented control
@@ -191,8 +213,6 @@ extension HomeViewController {
         
         endPointState.initParams()
         self.endPointState.loadMovies(with: self.endPoint)
-        //TODO: or maybe load movies should give off a completion (아 그럼 다 고쳐야하는디)
-        //TODO: fix + and make go back to top when changed? 
         self.movieListView.reloadData()
         
     }

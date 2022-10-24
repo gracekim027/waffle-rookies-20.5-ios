@@ -15,7 +15,7 @@ class GenreListState {
     var error : Error?
     
     func loadGenres() {
-        MovieViewModel.shared.getGenreList() {[weak self] (result) in
+        RootViewModel.shared.getGenreList() {[weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let response):

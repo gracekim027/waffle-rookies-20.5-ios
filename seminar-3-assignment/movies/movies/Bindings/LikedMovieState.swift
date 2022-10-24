@@ -12,9 +12,13 @@ import UIKit
 class LikedMovieState {
     //todo list 참고하기
     static var shared = LikedMovieState()
-    var LikedMovies:[Movie] = []
+    var LikedMovies : [Movie] = []
     var filteredMovies:[Movie] = []
     private let defaults = UserDefaults.standard
+   
+    func getObservable() -> Observable<[Movie]>{
+        return Observable<[Movie]>.of(self.LikedMovies)
+    }
     
     init(){
         NotificationCenter.default.addObserver(forName: Notification.Name("didTapChangeGenreFilter"), object: nil, queue: nil, using: didTapChangeGenreFilter)

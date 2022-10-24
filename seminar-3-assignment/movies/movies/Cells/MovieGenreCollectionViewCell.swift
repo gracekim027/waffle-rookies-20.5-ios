@@ -57,18 +57,18 @@ class MovieGenreCollectionViewCell: UICollectionViewCell {
     func configureDesign(){
         self.emojiLabel.layer.cornerRadius = 15
         self.emojiLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.emojiLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        
         self.emojiLabel.backgroundColor = UIColor(red: 39/255.0, green: 40/255.0, blue: 51/255.0, alpha: 1.0)
         self.emojiLabel.layer.cornerRadius = 15
         self.emojiLabel.textAlignment = .center
         self.emojiLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
+        self.emojiLabel.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        self.emojiLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
         self.emojiLabel.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        self.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-        self.heightAnchor.constraint(equalToConstant: self.contentView.frame.height-10).isActive = true
         self.emojiLabel.layer.masksToBounds = true
         
         self.nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.nameLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
+        self.nameLabel.centerXAnchor.constraint(equalTo: self.emojiLabel.centerXAnchor).isActive = true
         self.nameLabel.topAnchor.constraint(equalTo: self.emojiLabel.bottomAnchor, constant: 8).isActive = true
         self.nameLabel.textColor = Styles.darkGrey
         self.nameLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)

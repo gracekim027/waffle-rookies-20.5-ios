@@ -1,179 +1,90 @@
 //
-//  MovieStore.swift
+//  MovieService.swift
 //  movies
 //
 //  Created by grace kim  on 2022/10/09.
 //
 
-//search doesn't have filter with
-
 import Foundation
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
 
-var semaphore = DispatchSemaphore (value: 0)
+/*protocol MovieService {
+    func fetchMovies(from endpoint: MovieListEndPoint, completion: @escaping (Result <MovieResponse, MovieError>) -> ())
+    func fetchMovie(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ())
+    func searchMovie(query: String, completion: @escaping(Result<MovieResponse, MovieError>) -> ()  )
+}*/
 
-class MovieViewModel {
+struct MovieViewModel{
+    private let my_movie : Movie
     
-    private init() {}
-    
-    static let shared = MovieViewModel()
-    private let apiKey = "f330b07acf479c98b184db47a4d2608b"
-    private let baseAPIURL = "https://api.themoviedb.org/3"
-    private let urlSession = URLSession.shared
-    var page : Int = 1
-    
-    
-    //for when popular & top_rated
-    func fetchMovies(from endpoint: MovieListEndPoint, pageNum: Int, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
-        self.page = pageNum
-        
-        let URLString = "\(baseAPIURL)/movie/\(endpoint.rawValue)?api_key=\(apiKey)&language=en-US&page=\(page)"
-        guard let url = URL(string: URLString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)  else {
-            completion(.failure(.invalidEndPoint))
-            print("url error")
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-        guard error == nil else {
-            print("something went wrong")
-            return }
-        guard let data = data else {
-            semaphore.signal()
-            return
-        }
-        do {
-            //print("point 3")
-            let results : MovieResponse = try JSONDecoder().decode(MovieResponse.self, from: data)
-            //print(results.results[0].title) --> 여기까지됨.
-            completion(.success(results))
-            semaphore.signal()
-            } catch {
-            print(error.localizedDescription)
-        }
-        }
-        task.resume()
-        semaphore.wait()
+    var id : Int {
+        return my_movie.id
     }
     
-    func fetchMovie(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ()){
-        
-        guard let url = URL(string: "\(baseAPIURL)/movie/\(id)?/api_key=\(apiKey)&language=en-US") else {
-            completion(.failure(.invalidEndPoint))
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-        guard error == nil else {
-            print("something went wrong")
-            return }
-        guard let data = data else {
-            return
-        }
-        do {
-            let result : Movie = try JSONDecoder().decode(Movie.self, from: data)
-            DispatchQueue.main.async() {
-            completion(.success(result))
-                }
-           
-            print(result.title)
-            
-        } catch {
-            print(url)
-            print(String(describing: error))
-        }
-        }
-        task.resume()
+    var title : String {
+        return my_movie.title
     }
     
-      
-    //for when search bar tapped
-    func searchMovie(from query: String, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
-        guard let url = URL(string: "\(baseAPIURL)/search/movie?api_key=\(apiKey)&language=en-US&query=\(query)&page=\(page)&include_adult = false") else {
-            completion(.failure(.invalidEndPoint))
-            print("url error!")
-            return
-        }
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-        guard error == nil else {
-            print("something went wrong")
-            return }
-        guard let data = data else {
-            return
-        }
-        do {
-            let result : MovieResponse = try JSONDecoder().decode(MovieResponse.self, from: data)
-            completion(.success(result))
-            print(result.results[0].title)
-        } catch {
-            print(String(describing: error))
-        }
-        }
-        task.resume()
+    var posterPath : String? {
+        return my_movie.posterPath
     }
     
-    func getGenreList(completion: @escaping (Result<GenreDict, MovieError>) -> ()){
-        guard let url = URL(string:
-                                "https://api.themoviedb.org/3/genre/movie/list?api_key=\(apiKey)&language=en-US") else {
-            completion(.failure(.invalidEndPoint))
-            print("genre url error")
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-        guard error == nil else {
-            print("something went wrong in genre")
-            return }
-        guard let data = data else {
-            semaphore.signal()
-            return
-        }
-        do {
-            //print("point 4")
-            let result : GenreDict = try JSONDecoder().decode(GenreDict.self, from: data)
-            completion(.success(result))
-            semaphore.signal()
-        } catch {
-            print(String(describing: error))
-        }
-        }
-        task.resume()
-        semaphore.wait()
+    var overview : String {
+        return my_movie.overview
     }
     
-    private func loadURLAndDecode<D: Decodable>(url: URL, completion: @escaping (Result<D, MovieError>) -> ()){
-        urlSession.dataTask(with: url) { [weak self] (data, response, error) in
-            guard let self = self else {return}
-            if error != nil {
-                self.executeCompletionHandlerMainThread(wth: .failure(.apiError), completion: completion)
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-                self.executeCompletionHandlerMainThread(wth: .failure(.invalidResponse), completion: completion)
-                return
-            }
-            
-            guard let data = data else {
-                self.executeCompletionHandlerMainThread(wth: .failure(.noData), completion: completion)
-                return
-            }
-            
-            do {
-                let decodedResponse = try JSONDecoder().decode(D.self, from: data)
-                self.executeCompletionHandlerMainThread(wth: .success(decodedResponse), completion: completion)
-            }catch {
-                self.executeCompletionHandlerMainThread(wth: .failure(.serializationError), completion: completion)
-            }
-        }
+    var voteAverage : Double {
+        return my_movie.voteAverage
     }
     
-    private func executeCompletionHandlerMainThread<D: Decodable>(wth result: Result<D, MovieError>, completion: @escaping (Result<D, MovieError>) -> ()){
-        DispatchQueue.main.async {
-            completion(result)
-        }
+    var releaseDate : String {
+        return my_movie.releaseDate
     }
+    
+    var liked : Bool {
+        return my_movie.liked
+    }
+    
+    var genreIDs : [Int] {
+        return my_movie.genreIDs
+    }
+    
+    init(movie: Movie){
+        self.my_movie = movie
+    }
+    
+}
 
+enum MovieListEndPoint: String{
+    //popular, top rated
+    case topRated = "top_rated"
+    case popular
+    
+    var description: String {
+        switch self {
+        case .popular: return "Popular"
+        case .topRated: return "Top Rated"
+        }
+    }
+}
+
+enum MovieError: Error, CustomNSError {
+    case apiError
+    case invalidEndPoint
+    case invalidResponse
+    case noData
+    case serializationError
+    
+    var localizedDescription: String{
+        switch self {
+        case .apiError : return "Failed to fetch data"
+        case .invalidEndPoint: return "Invalid endpoint"
+        case .invalidResponse: return "Invalid response"
+        case .noData: return "No data"
+        case .serializationError: return "Failed to decode data"
+        }
+    }
+    
+    var errorUserInfo: [String : Any] {
+        [NSLocalizedDescriptionKey: localizedDescription]
+    }
 }

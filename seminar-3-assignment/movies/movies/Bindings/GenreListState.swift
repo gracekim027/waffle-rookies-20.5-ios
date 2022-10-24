@@ -35,4 +35,14 @@ class GenreListState {
         }
         return name
     }
+    
+    func findGenreId(with title: String)->Int{
+        var id : Int = 0
+        for genre in genres!{
+            if (genre.name == title){
+                id = genre.id
+            }
+        }
+        return id
+    }
 }

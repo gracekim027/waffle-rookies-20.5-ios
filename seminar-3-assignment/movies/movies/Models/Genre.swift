@@ -22,6 +22,7 @@ struct GenreDict : Decodable {
     private enum CodkingKeys: String, CodingKey {
         case genres
     }
+    
 }
 
 

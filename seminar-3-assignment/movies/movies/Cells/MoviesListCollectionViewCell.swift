@@ -7,7 +7,6 @@
 
 import UIKit
 
-///cell used for list views --> has movie poster, title, and rating on top of image
 class MoviesListCollectionViewCell: UICollectionViewCell {
    // static let identifier = "MoviesListCollectionViewCell"
     var my_movie : Movie?

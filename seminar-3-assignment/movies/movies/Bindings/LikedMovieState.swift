@@ -13,9 +13,12 @@ class LikedMovieState {
     //todo list 참고하기
     static var shared = LikedMovieState()
     var LikedMovies:[Movie] = []
+    var filteredMovies:[Movie] = []
     private let defaults = UserDefaults.standard
     
     init(){
+        NotificationCenter.default.addObserver(forName: Notification.Name("didTapChangeGenreFilter"), object: nil, queue: nil, using: didTapChangeGenreFilter)
+        
         NotificationCenter.default.addObserver(forName: Notification.Name("didTapLike"), object: nil, queue: nil, using: didTapLike)
         NotificationCenter.default.addObserver(forName: Notification.Name("didTapNotLike"), object: nil, queue: nil, using: didTapNotLike)
     }
@@ -34,6 +37,14 @@ class LikedMovieState {
             return
         }
         self.removeMovie(movie_to_delete: movieToDelete)
+    }
+    
+    
+    @objc func didTapChangeGenreFilter(_ notification: Notification) -> Void{
+        let id = GenreListState.shared.findGenreId(with: notification.userInfo!["filtername"] as? String ?? "action")
+        filteredMovies = self.LikedMovies.filter({ $0.genreIDs.contains(id)})
+        //TODO how to add filter ??
+        NotificationCenter.default.post(name: NSNotification.Name("reloadFilteredCells"), object: nil)
     }
     
     func saveMovieList(){

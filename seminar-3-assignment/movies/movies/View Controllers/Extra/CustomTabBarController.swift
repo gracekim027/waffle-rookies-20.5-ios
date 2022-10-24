@@ -36,7 +36,7 @@ class CustomTabBarController: UITabBarController {
         customTabBar.snp.makeConstraints {
             $0.width.equalTo(260)
             $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(50)
+            $0.bottom.equalToSuperview().inset(45)
             $0.height.equalTo(70)
         }
     }

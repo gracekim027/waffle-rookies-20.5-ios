@@ -23,19 +23,14 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     let headerLabel = UILabel()
     let profilePic = UIButton()
     let searchBar = UISearchBar()
-    //let categoryStack = CategoryStackView()
-    //change it into a collection view?
-   // let categoryStack = UIView()
-   // let categoryLabel = UILabel()
+   
     
     var codeSegmented = CustomSegmentedControl(buttonTitle: ["Popular","Top Rated"])
     
     let recentButton = UIButton()
     let popularButton = UIButton()
-    //let movieListView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout.init())
     var movieListView: UICollectionView!
     let layout = UICollectionViewFlowLayout()
-   // let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
     
     init(item: CustomTabItem) {
             self.item = item
@@ -111,7 +106,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 24).isActive = true
         movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
         movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        //TODO: add shadow,, scrolling looks hella ugly
+        //TODO: add shadow..or something ..scrolling looks ugly
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -126,8 +121,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         let VC = MovieDetailViewController(movie: (endPointState.movies?[indexPath.item])!)
         self.navigationController?.pushViewController(VC, animated: true)
     }
-    
-    
     
     
 }
@@ -198,11 +191,10 @@ extension HomeViewController {
         
         endPointState.initParams()
         self.endPointState.loadMovies(with: self.endPoint)
-        let seconds = 2.0
-        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
-            //TODO: fix + and make go back to top when changed? 
-            self.movieListView.reloadData()
-        }
+        //TODO: or maybe load movies should give off a completion (아 그럼 다 고쳐야하는디)
+        //TODO: fix + and make go back to top when changed? 
+        self.movieListView.reloadData()
+        
     }
 }
 

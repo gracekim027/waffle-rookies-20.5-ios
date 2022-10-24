@@ -11,4 +11,5 @@ import UIKit
 struct Styles {
     static let backgroundBlue = UIColor(red: 32/255.0, green: 33/255.0, blue: 44/255.0, alpha: 1.0)
     static let darkGrey = UIColor(red: 135/255.0, green: 134/255.0, blue: 140/255.0, alpha: 1.0)
+    static let fontGrey = UIColor(red: 163/255.0, green: 163/255.0, blue: 163/255.0, alpha: 1.0)
 }

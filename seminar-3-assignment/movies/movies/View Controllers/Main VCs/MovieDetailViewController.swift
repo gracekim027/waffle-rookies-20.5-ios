@@ -14,19 +14,25 @@ class MovieDetailViewController: UIViewController {
     var posterView = UIImageView()
     
     
+    
     var titleLabel = UILabel()
+    var divider = UILabel()
     
     var icon = UIImageView()
     var genreLabel = UILabel()
+    var realGenre = UILabel()
     var genreView = UIView()
     
     var icon2 = UIImageView()
     var relaseYear = UILabel()
+    var realYear = UILabel()
     var yearView = UIView()
     
     var icon3 = UIImageView()
     var rating = UILabel()
+    var likeButton = UIButton()
     var ratingView = UIView()
+    var realRating = UILabel()
     
     var summaryTitle = UILabel()
     var summaryLabel = UILabel()
@@ -36,14 +42,21 @@ class MovieDetailViewController: UIViewController {
         self.my_movie = movie
         let posterURL = URL(string: "https://image.tmdb.org/t/p/original\(movie.posterPath ?? "")")!
         self.posterView.load(url: posterURL)
-        self.rating.text = "Rating \n\(my_movie.voteAverage)"
+        self.realRating.text = "\(my_movie.voteAverage)"
+        self.rating.text = "Rating"
         self.titleLabel.text = movie.title
         let genreCode = movie.genreIDs[0]
         let genreName = GenreListState.shared.findGenreTitle(with: genreCode)
-        self.genreLabel.text = "Genre \n\(genreName)"
+        self.genreLabel.text = "Genre"
+        self.realGenre.text = "\(genreName)"
         let yearText = movie.releaseDate.components(separatedBy: "-")
-        self.relaseYear.text = yearText[0]
+        self.realYear.text = yearText[0]
         self.summaryLabel.text = movie.overview
+        if (movie.liked){
+            likeButton.isSelected = true
+        }else{
+            likeButton.isSelected = false
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,24 +67,34 @@ class MovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Movie Details"
+        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = textAttributes
+        self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-       // let backButton = UIButton()
-       // backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-       // let back = UIBarButtonItem(customView: backButton)
-        let likeButton = UIButton()
+        
+        
         likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
         likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
         let like = UIBarButtonItem(customView: likeButton)
-        //self.navigationItem.leftBarButtonItem = back
-       // self.navigationItem.setLeftBarButton(back, animated: true)
+        like.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -24)
         self.navigationItem.setRightBarButton(like, animated: true)
-        //TODO: add padding and change back button design and color to white
-        //TODO: fix rating labels 
+        
+        
+        
+        let backButtonBackgroundImage = UIImage(systemName: "chevron.backward")
+        self.navigationController?.navigationBar.backIndicatorImage = backButtonBackgroundImage
+        self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = backButtonBackgroundImage
+        
+        let backBarButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem = backBarButton
+        self.navigationItem.backButtonTitle = ""
+        //TODO: 진짜 죽어도 안 사라지는데?
         self.view.backgroundColor = Styles.backgroundBlue
         
         self.view.addSubview(posterView)
         self.view.addSubview(titleLabel)
+        self.view.addSubview(divider)
         
         self.view.addSubview(genreView)
         self.view.addSubview(yearView)
@@ -89,10 +112,12 @@ class MovieDetailViewController: UIViewController {
         if (self.my_movie.liked == false){
             //adding to liked movie list
             self.my_movie.liked = true
+            self.likeButton.isSelected = true
             NotificationCenter.default.post(name: NSNotification.Name("didTapLike"), object: nil, userInfo: ["movie": self.my_movie])
         }else {
             //removing from liked movie list
             self.my_movie.liked = false
+            self.likeButton.isSelected = false
             NotificationCenter.default.post(name: NSNotification.Name("didTapNotLike"), object: nil, userInfo: ["movie": self.my_movie])
         }
     }
@@ -101,9 +126,9 @@ class MovieDetailViewController: UIViewController {
         self.posterView.layer.cornerRadius = 22
         self.posterView.translatesAutoresizingMaskIntoConstraints = false
         self.posterView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
-        self.posterView.widthAnchor.constraint(equalToConstant: 209).isActive = true
-        self.posterView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100).isActive = true
-        self.posterView.heightAnchor.constraint(equalToConstant: 309).isActive = true
+        self.posterView.widthAnchor.constraint(equalToConstant: 220).isActive = true
+        self.posterView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 110).isActive = true
+        self.posterView.heightAnchor.constraint(equalToConstant: 325.26).isActive = true
         self.posterView.contentMode = .scaleAspectFill
         
         self.posterView.layer.masksToBounds = true
@@ -120,12 +145,18 @@ class MovieDetailViewController: UIViewController {
         self.titleLabel.numberOfLines = 1
         self.titleLabel.adjustsFontSizeToFitWidth = true
         
-
+        self.divider.backgroundColor = Styles.fontGrey
+        self.divider.translatesAutoresizingMaskIntoConstraints = false
+        self.divider.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 14).isActive = true
+        self.divider.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
+        self.divider.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -24).isActive = true
+        self.divider.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
         
         genreView.addSubview(icon)
         let iconImage = UIImage(named: "camera")
         icon.image = iconImage
         genreView.addSubview(genreLabel)
+        genreView.addSubview(realGenre)
         genreView.layer.borderWidth = 1
         genreView.layer.borderColor = Styles.darkGrey.cgColor
         genreView.layer.cornerRadius = 15
@@ -143,23 +174,30 @@ class MovieDetailViewController: UIViewController {
         icon.contentMode = .scaleToFill
         icon.layer.masksToBounds = true
         
-        genreLabel.textColor = .white
-        genreLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        genreLabel.textColor = Styles.fontGrey
+        genreLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         genreLabel.translatesAutoresizingMaskIntoConstraints = false
         genreLabel.centerXAnchor.constraint(equalTo: self.genreView.centerXAnchor).isActive = true
-        genreLabel.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: 15).isActive = true
+        genreLabel.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: 13).isActive = true
         genreLabel.numberOfLines = 2
+        
+        realGenre.textColor = .white
+        realGenre.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        realGenre.translatesAutoresizingMaskIntoConstraints = false
+        realGenre.centerXAnchor.constraint(equalTo: self.genreView.centerXAnchor).isActive = true
+        realGenre.topAnchor.constraint(equalTo: self.genreLabel.bottomAnchor, constant: 3).isActive = true
         
         
         yearView.addSubview(icon2)
         let iconImage2 = UIImage(named: "calendar")
         icon2.image = iconImage2
         yearView.addSubview(relaseYear)
+        yearView.addSubview(realYear)
         yearView.layer.borderWidth = 1
         yearView.layer.borderColor = Styles.darkGrey.cgColor
         yearView.layer.cornerRadius = 15
         yearView.translatesAutoresizingMaskIntoConstraints = false
-        yearView.topAnchor.constraint(equalTo: genreView.bottomAnchor, constant: 9).isActive = true
+        yearView.topAnchor.constraint(equalTo: genreView.bottomAnchor, constant: 22).isActive = true
         yearView.heightAnchor.constraint(equalToConstant: 93).isActive = true
         yearView.widthAnchor.constraint(equalToConstant: 98).isActive = true
         yearView.leadingAnchor.constraint(equalTo: self.posterView.trailingAnchor, constant: 24).isActive = true
@@ -172,23 +210,30 @@ class MovieDetailViewController: UIViewController {
         icon2.contentMode = .scaleToFill
         icon2.layer.masksToBounds = true
         
-        relaseYear.textColor = .white
-        relaseYear.text = "Release Date \n 2018"
-        relaseYear.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        relaseYear.textColor = Styles.fontGrey
+        relaseYear.text = "Release Date"
+        relaseYear.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         relaseYear.translatesAutoresizingMaskIntoConstraints = false
         relaseYear.centerXAnchor.constraint(equalTo: self.yearView.centerXAnchor).isActive = true
-        relaseYear.topAnchor.constraint(equalTo: icon2.bottomAnchor, constant: 15).isActive = true
+        relaseYear.topAnchor.constraint(equalTo: icon2.bottomAnchor, constant: 13).isActive = true
+        
+        realYear.textColor = .white
+        realYear.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        realYear.translatesAutoresizingMaskIntoConstraints = false
+        realYear.centerXAnchor.constraint(equalTo: self.yearView.centerXAnchor).isActive = true
+        realYear.topAnchor.constraint(equalTo: relaseYear.bottomAnchor, constant: 3).isActive = true
         
         
         ratingView.addSubview(icon3)
         let iconImage3 = UIImage(named: "rating_star")
         icon3.image = iconImage3
         ratingView.addSubview(rating)
+        ratingView.addSubview(realRating)
         ratingView.layer.borderWidth = 1
         ratingView.layer.borderColor = Styles.darkGrey.cgColor
         ratingView.layer.cornerRadius = 15
         ratingView.translatesAutoresizingMaskIntoConstraints = false
-        ratingView.topAnchor.constraint(equalTo: yearView.bottomAnchor, constant: 9).isActive = true
+        ratingView.topAnchor.constraint(equalTo: yearView.bottomAnchor, constant: 22).isActive = true
         ratingView.heightAnchor.constraint(equalToConstant: 93).isActive = true
         ratingView.widthAnchor.constraint(equalToConstant: 98).isActive = true
         ratingView.leadingAnchor.constraint(equalTo: self.posterView.trailingAnchor, constant: 24).isActive = true
@@ -201,11 +246,17 @@ class MovieDetailViewController: UIViewController {
         icon3.contentMode = .scaleToFill
         icon3.layer.masksToBounds = true
         
-        rating.textColor = .white
-        rating.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        rating.textColor = Styles.fontGrey
+        rating.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         rating.translatesAutoresizingMaskIntoConstraints = false
         rating.centerXAnchor.constraint(equalTo: self.ratingView.centerXAnchor).isActive = true
-        rating.topAnchor.constraint(equalTo: icon3.bottomAnchor, constant: 15).isActive = true
+        rating.topAnchor.constraint(equalTo: icon3.bottomAnchor, constant: 13).isActive = true
+        
+        realRating.textColor = .white
+        realRating.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        realRating.translatesAutoresizingMaskIntoConstraints = false
+        realRating.centerXAnchor.constraint(equalTo: self.ratingView.centerXAnchor).isActive = true
+        realRating.topAnchor.constraint(equalTo: rating.bottomAnchor, constant: 3).isActive = true
         
     }
     
@@ -214,7 +265,7 @@ class MovieDetailViewController: UIViewController {
         self.summaryTitle.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         self.summaryTitle.textColor = .white
         self.summaryTitle.translatesAutoresizingMaskIntoConstraints = false
-        self.summaryTitle.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 20).isActive = true
+        self.summaryTitle.topAnchor.constraint(equalTo: self.divider.bottomAnchor, constant: 20).isActive = true
         self.summaryTitle.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
         self.summaryTitle.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -24).isActive = true
         

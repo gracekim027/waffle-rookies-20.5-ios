@@ -32,7 +32,7 @@ class CustomSegmentedControl: UIView {
     
     override func draw(_ rect: CGRect) {
        super.draw(rect)
-       self.backgroundColor = UIColor.white
+       self.backgroundColor = UIColor.clear
         updateView()
     }
     

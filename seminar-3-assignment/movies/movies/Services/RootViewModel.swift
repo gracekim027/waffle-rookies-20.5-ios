@@ -81,7 +81,7 @@ class RootViewModel {
             completion(.success(result))
                 }
            
-            print(result.title)
+            //print(result.title)
             
         } catch {
             print(url)

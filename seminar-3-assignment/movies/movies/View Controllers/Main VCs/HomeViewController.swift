@@ -26,7 +26,7 @@ class HomeViewController: UIViewController{
     let profilePic = UIButton()
     let searchBar = UISearchBar()
 
-    var codeSegmented = CustomSegmentedControl(buttonTitle: ["Popular","Top Rated"])
+    var codeSegmented = CustomSegmentedControl()
     
     let recentButton = UIButton()
     let popularButton = UIButton()
@@ -45,7 +45,8 @@ class HomeViewController: UIViewController{
 
     override func viewDidLoad() {
 
-        NotificationCenter.default.addObserver(forName: Notification.Name("changedFilter"), object: nil, queue: nil, using: didTapChangeFilter)
+        //NotificationCenter.default.addObserver(forName: Notification.Name("changedFilter"), object: nil, queue: nil, using: didTapChangeFilter)
+        NotificationCenter.default.addObserver(forName: Notification.Name("buttonsSet"), object: nil, queue: nil, using: buttonsSet)
         super.viewDidLoad()
         
         GenreListState.shared.loadGenres()
@@ -68,13 +69,9 @@ class HomeViewController: UIViewController{
         configureHeader()
         configureSearchBar()
         configureSegmentedControl()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
-         self.endPoint = MovieListEndPoint.topRated
-         self.TopRatedCollectionView.view.isHidden = false
-            self.popularCollectionView.view.isHidden = true
+        for button in self.codeSegmented.buttons {
+            button.addTarget(self, action: #selector(didTapChangeFilter), for: .touchUpInside)
         }
-
         
     }
     
@@ -157,8 +154,8 @@ extension HomeViewController {
         
     }
     
-    @objc func didTapChangeFilter(_ notification: Notification) -> (){
-        print("did tap change filter")
+    @objc func didTapChangeFilter(){
+        //print("did tap change filter")
         if (codeSegmented.selectedIndex == 0){
             self.endPoint = MovieListEndPoint.popular
             self.TopRatedCollectionView.view.isHidden = true
@@ -169,12 +166,13 @@ extension HomeViewController {
             self.endPoint = MovieListEndPoint.topRated
             self.popularCollectionView.view.isHidden = true
          self.TopRatedCollectionView.view.isHidden = false
-            
-            
-
         }
-        
-        
+    }
+    
+    @objc func buttonsSet(_ notification : Notification)->(){
+        for button in self.codeSegmented.buttons {
+            button.addTarget(self, action: #selector(didTapChangeFilter), for: .touchUpInside)
+        }
     }
     
 }

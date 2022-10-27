@@ -40,12 +40,9 @@ class TopRatedMoviesListState {
         switch result {
         case .success(let response):
             self.movies = []
-            self.MoviesObservable = BehaviorRelay<[Movie]>(value: [])
-            self.MoviesObservable.accept(response.results)
-            print(self.MoviesObservable.value[0].title)
             self.movies = response.results
         case .failure(let error):
-            print("error in loading movies")
+            //print("error in loading movies")
             self.error = error as NSError
         }
     }
@@ -59,7 +56,6 @@ class TopRatedMoviesListState {
         guard let self = self else { return }
         switch result {
         case .success(let response):
-            self.MoviesObservable.accept(response.results)
             self.movies = response.results
         case .failure(let error):
             self.error = error as NSError
@@ -73,7 +69,6 @@ class TopRatedMoviesListState {
         guard let self = self else { return }
         switch result {
         case .success(let response):
-            self.MoviesObservable.accept(self.MoviesObservable.value + response.results)
             self.movies += response.results
         case .failure(let error):
             print("error in loading movies")
@@ -84,7 +79,6 @@ class TopRatedMoviesListState {
     
     func initParams(){
         self.page = 1
-        self.MoviesObservable = BehaviorRelay<[Movie]>(value: [])
         self.movies = []
     }
 }

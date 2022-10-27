@@ -23,7 +23,7 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
         super.viewDidLoad()
 
         endPointState.loadMovies(with: endPoint)
-        print(endPointState.movies[0].title)
+        //print(endPointState.movies[0].title)
         movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.view.addSubview(movieListView)
         configureMovieList()
@@ -43,7 +43,7 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
                 .observe(on: MainScheduler.instance)
                 .bind(to: self.movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in
                     cell.configureMovie(movie)
-                    print(movie.title)
+                    //print(movie.title)
                 }
                 .disposed(by: self.bag)
         

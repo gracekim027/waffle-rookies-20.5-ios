@@ -9,9 +9,8 @@ import SnapKit
 
 final class CustomItemView: UIView {
     
-    //private let nameLabel = UILabel()
+    
     private let iconImageView = UIImageView()
-    //private let underlineView = UIView()
     private let containerView = UIView()
     let index: Int
     

@@ -16,10 +16,10 @@ protocol CustomSegmentedControlDelegate:AnyObject {
 
 class CustomSegmentedControl: UIView {
    
-    let filterButtontapped = PublishRelay<Void>()
-    var shouldLoadResult = Observable<String>.of("")
-    private var buttonTitles:[String]!
-    var buttons: [UIButton]!
+    
+    private var buttonTitles:[String] = ["Popular","Top Rated"]
+    var likedButton = UIButton()
+    var buttons: [UIButton] = []
     private var selectorView: UIView!
     
     var textColor:UIColor = Styles.darkGrey
@@ -30,14 +30,25 @@ class CustomSegmentedControl: UIView {
     
     public private(set) var selectedIndex : Int = 0
     
-    convenience init(buttonTitle:[String]) {
+    convenience init() {
+        //init: buttonTitle:[String]
         self.init(frame: .zero)
-        self.buttonTitles = buttonTitle
+        for buttonTitle in buttonTitles {
+            let button = UIButton(type: .system)
+            button.setTitle(buttonTitle, for: .normal)
+            button.addTarget(self, action:#selector(CustomSegmentedControl.buttonAction(sender:)), for: .touchUpInside)
+            button.setTitleColor(textColor, for: .normal)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+            button.titleLabel?.textAlignment = .left
+            buttons.append(button)
+        }
+        buttons[0].setTitleColor(selectorTextColor, for: .normal)
     }
     
     override func draw(_ rect: CGRect) {
        super.draw(rect)
        self.backgroundColor = UIColor.clear
+        
         updateView()
     }
     
@@ -58,15 +69,15 @@ class CustomSegmentedControl: UIView {
     }
     
     @objc func buttonAction(sender:UIButton) {
-        //print("changed segmented control")
         NotificationCenter.default.post(name: NSNotification.Name("changedFilter"), object: nil)
         for (buttonIndex, btn) in buttons.enumerated() {
             btn.setTitleColor(textColor, for: .normal)
             if btn == sender {
                 let selectorPosition = frame.width/CGFloat(buttonTitles.count) * CGFloat(buttonIndex)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                /*DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     self.selectedIndex = buttonIndex
-                }
+                }*/
+                self.selectedIndex = buttonIndex
                 delegate?.change(to: selectedIndex)
                 UIView.animate(withDuration: 0.2) {
                     self.selectorView.frame.origin.x = selectorPosition
@@ -80,7 +91,7 @@ class CustomSegmentedControl: UIView {
 //Configuration View
 extension CustomSegmentedControl {
     private func updateView() {
-        createButton()
+        //createButton()
         configSelectorView()
         configStackView()
     }
@@ -120,6 +131,7 @@ extension CustomSegmentedControl {
             buttons.append(button)
         }
         buttons[0].setTitleColor(selectorTextColor, for: .normal)
+        NotificationCenter.default.post(name: NSNotification.Name("buttonsSet"), object: nil)
     }
     
     

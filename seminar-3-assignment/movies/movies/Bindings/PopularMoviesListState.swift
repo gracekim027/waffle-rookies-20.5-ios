@@ -51,7 +51,7 @@ class PopularMoviesListState {
             self.movies = []
             self.movies = response.results
         case .failure(let error):
-            print("error in loading movies")
+            //print("error in loading movies")
             self.error = error as NSError
         }
     }
@@ -77,7 +77,7 @@ class PopularMoviesListState {
         case .success(let response):
             self.movies += response.results
         case .failure(let error):
-            print("error in loading movies")
+            //print("error in loading movies")
             self.error = error as NSError
         }
     }

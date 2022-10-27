@@ -10,7 +10,7 @@ import RxSwift
 import UIKit
 import RxCocoa
 
-class LikedMovieState: ObservableObject {
+class LikedMovieState{
    
     
     var LikedMovies = [Movie]() {
@@ -40,7 +40,7 @@ class LikedMovieState: ObservableObject {
     }
     
     @objc func didTapLike(_ notification: Notification) -> Void{
-        print("got movie to add")
+        //print("got movie to add")
         guard let movieToAdd = notification.userInfo!["movie"] as? Movie else {
             return
         }
@@ -48,20 +48,21 @@ class LikedMovieState: ObservableObject {
     }
     
     @objc func didTapNotLike(_ notification: Notification) -> Void{
-        print("got movie to remove")
+        //print("got movie to remove")
         guard let movieToDelete = notification.userInfo!["movie"] as? Movie else {
             return
         }
         self.removeMovie(movie_to_delete: movieToDelete)
     }
     
-    /*
+    
     @objc func didTapChangeGenreFilter(_ notification: Notification) -> Void{
         let id = GenreListState.shared.findGenreId(with: notification.userInfo!["filtername"] as? String ?? "action")
-        filteredMovies = self.LikedMovies.filter({ $0.genreIDs.contains(id)})
-        //TODO how to add filter ??
+        let filtered = LikedMovies.filter{ movie in
+            return movie.genreIDs.contains(id)}
+        //문제가 셀을 한번 선택하면 없는데?
         NotificationCenter.default.post(name: NSNotification.Name("reloadFilteredCells"), object: nil)
-    }*/
+    }
     
     func saveMovieList(){
         let movie_save = self.LikedMovies.map {

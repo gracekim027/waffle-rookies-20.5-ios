@@ -53,6 +53,9 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         { title, emoji, cell in
             cell.configureGenre(title: emoji[0], emoji: emoji[1])
             cell.layer.cornerRadius = 15
+            if (emoji[0] == "all"){
+                cell.isSelected = true
+            }
         }
         .disposed(by: bag)
         
@@ -80,9 +83,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     
     
     override func viewDidLoad() {
-      print(self.likedMovieState.LikedMovies.count)
-       NotificationCenter.default.addObserver(forName: Notification.Name("didTapLike"), object: nil, queue: nil, using: didTapLike)
-        NotificationCenter.default.addObserver(forName: Notification.Name("didTapNotLike"), object: nil, queue: nil, using: didTapLike)
+      
       
         self.view.backgroundColor = Styles.backgroundBlue
         likedMovieState.loadMovieList()
@@ -107,14 +108,6 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         // Do any additional setup after loading the view.
     }
     
-    
-    @objc func didTapLike(_ notification: Notification) -> Void{
-      self.movieListView.reloadData()
-    }
-    
-    @objc func reloadFilteredData(_ notification: Notification) -> Void{
-        self.movieListView.reloadData()
-    }
     
     
     func configureSubLabels(){
@@ -190,6 +183,8 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     
     let genresToSave =
     [
+        
+    ["all", "☺️"],
     ["action","😮‍💨"],
     ["comedy", "😝"],
     ["drama", "😢"],

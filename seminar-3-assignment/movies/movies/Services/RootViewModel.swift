@@ -11,7 +11,7 @@ import RxCocoa
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 import UIKit
-import XCTest
+//import XCTest
 #endif
 
 var semaphore = DispatchSemaphore (value: 0)

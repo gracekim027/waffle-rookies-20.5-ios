@@ -8,11 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		652995C229056AE100978F5A /* MovieGenreCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652995C129056AE100978F5A /* MovieGenreCollectionViewCell.swift */; };
-		6549045228F2876C00CC7C9A /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 6549045128F2876C00CC7C9A /* RxBlocking */; };
-		6549045428F2876C00CC7C9A /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 6549045328F2876C00CC7C9A /* RxCocoa */; };
-		6549045628F2876C00CC7C9A /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 6549045528F2876C00CC7C9A /* RxRelay */; };
-		6549045928F2878100CC7C9A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6549045828F2878100CC7C9A /* SnapKit */; };
-		6549045C28F287FB00CC7C9A /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = 6549045B28F287FB00CC7C9A /* RxGesture */; };
 		6549046028F28AFA00CC7C9A /* CustomItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549045F28F28AFA00CC7C9A /* CustomItemView.swift */; };
 		6549046228F28B2600CC7C9A /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549046128F28B2600CC7C9A /* CustomTabBar.swift */; };
 		6549046428F28B4A00CC7C9A /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549046328F28B4A00CC7C9A /* CustomTabBarController.swift */; };
@@ -29,6 +24,13 @@
 		65677BBD28F17D65001885BF /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65677BBC28F17D65001885BF /* FavoritesViewController.swift */; };
 		65677BBF28F17D90001885BF /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65677BBE28F17D90001885BF /* Styles.swift */; };
 		65677BC828F18D3F001885BF /* MoviesListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65677BC728F18D3F001885BF /* MoviesListCollectionViewCell.swift */; };
+		656ADD6E290AC18300E59EF5 /* Pods_movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60412A080D25D4DCC499C491 /* Pods_movies.framework */; };
+		656ADD6F290AC18300E59EF5 /* Pods_movies.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60412A080D25D4DCC499C491 /* Pods_movies.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		656ADD85290AC9A600E59EF5 /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 656ADD84290AC9A600E59EF5 /* RxBlocking */; };
+		656ADD87290AC9A600E59EF5 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 656ADD86290AC9A600E59EF5 /* RxCocoa */; };
+		656ADD89290AC9A600E59EF5 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 656ADD88290AC9A600E59EF5 /* RxRelay */; };
+		656ADD8B290AC9A600E59EF5 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 656ADD8A290AC9A600E59EF5 /* RxSwift */; };
+		656ADD8D290AC9A600E59EF5 /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 656ADD8C290AC9A600E59EF5 /* RxTest */; };
 		65D238D128F140F5004F35BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D238D028F140F5004F35BE /* AppDelegate.swift */; };
 		65D238D328F140F5004F35BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D238D228F140F5004F35BE /* SceneDelegate.swift */; };
 		65D238DA28F140F7004F35BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65D238D928F140F7004F35BE /* Assets.xcassets */; };
@@ -38,8 +40,21 @@
 		65EAC27C290A85B600548C34 /* PopularMoviesListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EAC27B290A85B600548C34 /* PopularMoviesListState.swift */; };
 		65EAC27E290A85BF00548C34 /* TopRatedMoviesListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EAC27D290A85BF00548C34 /* TopRatedMoviesListState.swift */; };
 		65EAC280290ABC0C00548C34 /* SearchedMovieListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EAC27F290ABC0C00548C34 /* SearchedMovieListState.swift */; };
-		AD7B0575C6C52AE9A71BFEEF /* Pods_movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60412A080D25D4DCC499C491 /* Pods_movies.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		656ADD70290AC18300E59EF5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				656ADD6F290AC18300E59EF5 /* Pods_movies.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3ABA9BA2BB0DE2C52A30DDB9 /* Pods-movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-movies.debug.xcconfig"; path = "Target Support Files/Pods-movies/Pods-movies.debug.xcconfig"; sourceTree = "<group>"; };
@@ -61,6 +76,13 @@
 		65677BBC28F17D65001885BF /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		65677BBE28F17D90001885BF /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
 		65677BC728F18D3F001885BF /* MoviesListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListCollectionViewCell.swift; sourceTree = "<group>"; };
+		656ADD50290AC09700E59EF5 /* RxCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		656ADD54290AC0A400E59EF5 /* RxCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		656ADD55290AC0A400E59EF5 /* RxDataSources.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxDataSources.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		656ADD56290AC0A400E59EF5 /* RxRelay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxRelay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		656ADD57290AC0A400E59EF5 /* RxSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		656ADD77290AC28F00E59EF5 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		656ADD79290AC42000E59EF5 /* XcodeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XcodeKit.framework; path = Library/Frameworks/XcodeKit.framework; sourceTree = DEVELOPER_DIR; };
 		65D238CD28F140F5004F35BE /* movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65D238D028F140F5004F35BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65D238D228F140F5004F35BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -80,12 +102,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6549045428F2876C00CC7C9A /* RxCocoa in Frameworks */,
-				AD7B0575C6C52AE9A71BFEEF /* Pods_movies.framework in Frameworks */,
-				6549045628F2876C00CC7C9A /* RxRelay in Frameworks */,
-				6549045228F2876C00CC7C9A /* RxBlocking in Frameworks */,
-				6549045C28F287FB00CC7C9A /* RxGesture in Frameworks */,
-				6549045928F2878100CC7C9A /* SnapKit in Frameworks */,
+				656ADD87290AC9A600E59EF5 /* RxCocoa in Frameworks */,
+				656ADD6E290AC18300E59EF5 /* Pods_movies.framework in Frameworks */,
+				656ADD8B290AC9A600E59EF5 /* RxSwift in Frameworks */,
+				656ADD89290AC9A600E59EF5 /* RxRelay in Frameworks */,
+				656ADD8D290AC9A600E59EF5 /* RxTest in Frameworks */,
+				656ADD85290AC9A600E59EF5 /* RxBlocking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +126,13 @@
 		4BBFA678C4FCEEA44882FFCD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				656ADD79290AC42000E59EF5 /* XcodeKit.framework */,
+				656ADD77290AC28F00E59EF5 /* XCTest.framework */,
+				656ADD54290AC0A400E59EF5 /* RxCocoa.framework */,
+				656ADD55290AC0A400E59EF5 /* RxDataSources.framework */,
+				656ADD56290AC0A400E59EF5 /* RxRelay.framework */,
+				656ADD57290AC0A400E59EF5 /* RxSwift.framework */,
+				656ADD50290AC09700E59EF5 /* RxCocoa.framework */,
 				60412A080D25D4DCC499C491 /* Pods_movies.framework */,
 			);
 			name = Frameworks;
@@ -245,6 +274,7 @@
 				65D238CA28F140F5004F35BE /* Frameworks */,
 				65D238CB28F140F5004F35BE /* Resources */,
 				B981A4CACA6AB5607242CBC9 /* [CP] Embed Pods Frameworks */,
+				656ADD70290AC18300E59EF5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -252,11 +282,11 @@
 			);
 			name = movies;
 			packageProductDependencies = (
-				6549045128F2876C00CC7C9A /* RxBlocking */,
-				6549045328F2876C00CC7C9A /* RxCocoa */,
-				6549045528F2876C00CC7C9A /* RxRelay */,
-				6549045828F2878100CC7C9A /* SnapKit */,
-				6549045B28F287FB00CC7C9A /* RxGesture */,
+				656ADD84290AC9A600E59EF5 /* RxBlocking */,
+				656ADD86290AC9A600E59EF5 /* RxCocoa */,
+				656ADD88290AC9A600E59EF5 /* RxRelay */,
+				656ADD8A290AC9A600E59EF5 /* RxSwift */,
+				656ADD8C290AC9A600E59EF5 /* RxTest */,
 			);
 			productName = movies;
 			productReference = 65D238CD28F140F5004F35BE /* movies.app */;
@@ -287,9 +317,9 @@
 			);
 			mainGroup = 65D238C428F140F5004F35BE;
 			packageReferences = (
-				6549045028F2876C00CC7C9A /* XCRemoteSwiftPackageReference "RxSwift" */,
-				6549045728F2878100CC7C9A /* XCRemoteSwiftPackageReference "SnapKit" */,
-				6549045A28F287FB00CC7C9A /* XCRemoteSwiftPackageReference "RxGesture" */,
+				656ADD63290AC15700E59EF5 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				656ADD74290AC24700E59EF5 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				656ADD83290AC9A600E59EF5 /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = 65D238CE28F140F5004F35BE /* Products */;
 			projectDirPath = "";
@@ -583,15 +613,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		6549045028F2876C00CC7C9A /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+		656ADD63290AC15700E59EF5 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
+				branch = main;
+				kind = branch;
 			};
 		};
-		6549045728F2878100CC7C9A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+		656ADD74290AC24700E59EF5 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
@@ -599,41 +629,41 @@
 				kind = branch;
 			};
 		};
-		6549045A28F287FB00CC7C9A /* XCRemoteSwiftPackageReference "RxGesture" */ = {
+		656ADD83290AC9A600E59EF5 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RxSwiftCommunity/RxGesture";
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6549045128F2876C00CC7C9A /* RxBlocking */ = {
+		656ADD84290AC9A600E59EF5 /* RxBlocking */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6549045028F2876C00CC7C9A /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 656ADD63290AC15700E59EF5 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxBlocking;
 		};
-		6549045328F2876C00CC7C9A /* RxCocoa */ = {
+		656ADD86290AC9A600E59EF5 /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6549045028F2876C00CC7C9A /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 656ADD63290AC15700E59EF5 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
 		};
-		6549045528F2876C00CC7C9A /* RxRelay */ = {
+		656ADD88290AC9A600E59EF5 /* RxRelay */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6549045028F2876C00CC7C9A /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 656ADD63290AC15700E59EF5 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxRelay;
 		};
-		6549045828F2878100CC7C9A /* SnapKit */ = {
+		656ADD8A290AC9A600E59EF5 /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6549045728F2878100CC7C9A /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
+			package = 656ADD63290AC15700E59EF5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
 		};
-		6549045B28F287FB00CC7C9A /* RxGesture */ = {
+		656ADD8C290AC9A600E59EF5 /* RxTest */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6549045A28F287FB00CC7C9A /* XCRemoteSwiftPackageReference "RxGesture" */;
-			productName = RxGesture;
+			package = 656ADD63290AC15700E59EF5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxTest;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -6,13 +6,14 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class MovieDetailViewController: UIViewController {
 
     var my_movie : Movie
 
     var posterView = UIImageView()
-    
     
     
     var titleLabel = UILabel()
@@ -52,11 +53,14 @@ class MovieDetailViewController: UIViewController {
         let yearText = movie.releaseDate.components(separatedBy: "-")
         self.realYear.text = yearText[0]
         self.summaryLabel.text = movie.overview
-        if (movie.liked){
+        
+        if (LikedMovieState.shared.LikedMovies.contains( where: {$0.id == movie.id} )){
+            //계속 서치하는건 진짜 너무 시간적 낭비 아닌가
             likeButton.isSelected = true
         }else{
             likeButton.isSelected = false
         }
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -76,6 +80,7 @@ class MovieDetailViewController: UIViewController {
         likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
         likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
+        
         let like = UIBarButtonItem(customView: likeButton)
         like.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -24)
         self.navigationItem.setRightBarButton(like, animated: true)
@@ -277,8 +282,6 @@ class MovieDetailViewController: UIViewController {
         self.summaryLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -24).isActive = true
         self.summaryLabel.textAlignment = .left
         self.summaryLabel.numberOfLines = 0
-       // self.summaryLabel.adjustsFontSizeToFitWidth = true
-        
     }
     
     

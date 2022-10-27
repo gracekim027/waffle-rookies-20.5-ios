@@ -7,12 +7,17 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 protocol CustomSegmentedControlDelegate:AnyObject {
     func change(to index:Int)
 }
 
 class CustomSegmentedControl: UIView {
+   
+    let filterButtontapped = PublishRelay<Void>()
+    var shouldLoadResult = Observable<String>.of("")
     private var buttonTitles:[String]!
     var buttons: [UIButton]!
     private var selectorView: UIView!
@@ -53,12 +58,15 @@ class CustomSegmentedControl: UIView {
     }
     
     @objc func buttonAction(sender:UIButton) {
+        //print("changed segmented control")
+        NotificationCenter.default.post(name: NSNotification.Name("changedFilter"), object: nil)
         for (buttonIndex, btn) in buttons.enumerated() {
             btn.setTitleColor(textColor, for: .normal)
             if btn == sender {
-                NotificationCenter.default.post(name: NSNotification.Name("changedFilter"), object: nil)
                 let selectorPosition = frame.width/CGFloat(buttonTitles.count) * CGFloat(buttonIndex)
-                selectedIndex = buttonIndex
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.selectedIndex = buttonIndex
+                }
                 delegate?.change(to: selectedIndex)
                 UIView.animate(withDuration: 0.2) {
                     self.selectorView.frame.origin.x = selectorPosition
@@ -90,7 +98,6 @@ extension CustomSegmentedControl {
         stack.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
         stack.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
     }
-    
     
     private func configSelectorView() {
         let selectorWidth = frame.width / CGFloat(self.buttonTitles.count)

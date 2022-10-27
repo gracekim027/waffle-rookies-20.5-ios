@@ -16,6 +16,8 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     
     private var likedMovieState = LikedMovieState.shared
    
+
+
     var titleLabel = UILabel()
     var categoryStackLabel = UILabel()
     
@@ -42,10 +44,11 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         genreListView.rx.setDelegate(self)
             .disposed(by: bag)
         
-        let moviesObservable = Observable.of(self.likedMovieState.LikedMovies)
+        
         let genreObservable = Observable.of(self.genresToSave)
 
         genreObservable
+            .observe(on: MainScheduler.instance)
             .bind(to: genreListView.rx.items(cellIdentifier: "MovieGenreCollectionViewCell", cellType: MovieGenreCollectionViewCell.self))
         { title, emoji, cell in
             cell.configureGenre(title: emoji[0], emoji: emoji[1])
@@ -58,24 +61,29 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
                 //change filter
             })
         
-        moviesObservable
+        
+        self.likedMovieState.moviesObserver
+            .observe(on: MainScheduler.instance)
             .bind(to: movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in
                 cell.configureMovie(movie)
             }
             .disposed(by: bag)
         
-        movieListView.rx.itemSelected
-            .subscribe(onNext: { index in
-                let VC = MovieDetailViewController(movie: (self.likedMovieState.LikedMovies[index.item]))
-                self.navigationController?.pushViewController(VC, animated: true)
+        self.movieListView.rx.modelSelected(Movie.self)
+            .subscribe(onNext: { movie in
+            let VC = MovieDetailViewController(movie: movie)
+            self.navigationController?.pushViewController(VC, animated: true)
             })
             .disposed(by: bag)
     }
     
+    
+    
     override func viewDidLoad() {
-        NotificationCenter.default.addObserver(forName: Notification.Name("didTapLike"), object: nil, queue: nil, using: didTapLike)
+      print(self.likedMovieState.LikedMovies.count)
+       NotificationCenter.default.addObserver(forName: Notification.Name("didTapLike"), object: nil, queue: nil, using: didTapLike)
         NotificationCenter.default.addObserver(forName: Notification.Name("didTapNotLike"), object: nil, queue: nil, using: didTapLike)
-        NotificationCenter.default.addObserver(forName: Notification.Name("reloadFilteredCells"), object: nil, queue: nil, using: reloadFilteredData)
+      
         self.view.backgroundColor = Styles.backgroundBlue
         likedMovieState.loadMovieList()
         super.viewDidLoad()
@@ -98,6 +106,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         
         // Do any additional setup after loading the view.
     }
+    
     
     @objc func didTapLike(_ notification: Notification) -> Void{
       self.movieListView.reloadData()
@@ -143,9 +152,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     func configureGenreListView(){
         layout2.scrollDirection = .horizontal
         genreListView.setCollectionViewLayout(layout2, animated: true)
-        //genreListView.dataSource = self
         genreListView.showsHorizontalScrollIndicator = false
-        //genreListView.delegate = self
         genreListView.backgroundColor = .clear
         genreListView.translatesAutoresizingMaskIntoConstraints = false
         genreListView.topAnchor.constraint(equalTo: self.categoryStackLabel.bottomAnchor, constant: 10).isActive = true
@@ -162,14 +169,14 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         movieListView.setCollectionViewLayout(layout, animated: true)
         //movieListView.dataSource = self
         movieListView.showsVerticalScrollIndicator = false
-        movieListView.delegate = self
+        //movieListView.delegate = self
         movieListView.backgroundColor = .clear
         movieListView.translatesAutoresizingMaskIntoConstraints = false
         movieListView.topAnchor.constraint(equalTo: self.genreListView.bottomAnchor, constant: 20).isActive = true
         movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 24).isActive = true
         movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
         movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        //TODO: add shadow,, scrolling looks hella ugly
+        //TODO: add shadow to scrolling?
     }
     
     
@@ -180,47 +187,6 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
             return CGSize(width: 68.0, height: 72.0)
         }
     }
-    
-    /*func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == self.movieListView{
-        return likedMovieState.LikedMovies.count
-        }else{
-            return genresToSave.count
-        }
-    }*/
-    
-    /*
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //TODO: fix some time problem --> 좋아요 누르고 나서 reload 하는데 지체가 있음.
-        //TODO: dispatch queue add time delay
-        if collectionView == self.movieListView{
-        let movie = likedMovieState.LikedMovies[indexPath.item]
-        let VC = MovieDetailViewController(movie: movie)
-        self.navigationController?.pushViewController(VC, animated: true)
-        }else{
-            //let genre = genresToSave[indexPath.item][0]
-        }
-    }*/
-    
-   
-    /*
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        if collectionView == self.movieListView {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MoviesListCollectionViewCell", for: indexPath) as! MoviesListCollectionViewCell
-        let movie = self.likedMovieState.LikedMovies[indexPath.row]
-        cell.configureMovie(movie)
-        return cell
-        }else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieGenreCollectionViewCell", for: indexPath) as! MovieGenreCollectionViewCell
-            
-            let title  = self.genresToSave[indexPath.row][0]
-            let emoji = self.genresToSave[indexPath.row][1]
-            cell.configureGenre(title: title, emoji: emoji)
-            cell.layer.cornerRadius = 15
-            return cell
-        }
-    }*/
     
     let genresToSave =
     [

@@ -3,9 +3,7 @@
 //  movies
 //
 //  Created by grace kim  on 2022/10/09.
-//
 
-//search doesn't have filter with
 
 import Foundation
 import RxSwift
@@ -27,7 +25,7 @@ class RootViewModel {
     private let baseAPIURL = "https://api.themoviedb.org/3"
     private let urlSession = URLSession.shared
     var page : Int = 1
-    
+    var movies : [Movie] = []
     
     
     //for when popular & top_rated

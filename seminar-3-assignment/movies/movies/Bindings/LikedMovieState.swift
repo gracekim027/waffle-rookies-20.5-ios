@@ -8,21 +8,33 @@
 import Foundation
 import RxSwift
 import UIKit
+import RxCocoa
 
-class LikedMovieState {
-    //todo list 참고하기
-    static var shared = LikedMovieState()
-    var LikedMovies : [Movie] = []
-    var filteredMovies:[Movie] = []
-    private let defaults = UserDefaults.standard
+class LikedMovieState: ObservableObject {
    
-    func getObservable() -> Observable<[Movie]>{
-        return Observable<[Movie]>.of(self.LikedMovies)
+    
+    var LikedMovies = [Movie]() {
+        didSet {
+            self.getObserver()
+            self.saveMovieList()
+        }
+    }
+    
+    func getObserver(){
+        self.moviesObservable.accept(LikedMovies)
+    }
+    
+    static var shared = LikedMovieState()
+    
+    private let defaults = UserDefaults.standard
+    
+    var moviesObservable = BehaviorRelay<[Movie]>(value: [])
+    
+    var moviesObserver: Observable<[Movie]> {
+        return moviesObservable.asObservable()
     }
     
     init(){
-        NotificationCenter.default.addObserver(forName: Notification.Name("didTapChangeGenreFilter"), object: nil, queue: nil, using: didTapChangeGenreFilter)
-        
         NotificationCenter.default.addObserver(forName: Notification.Name("didTapLike"), object: nil, queue: nil, using: didTapLike)
         NotificationCenter.default.addObserver(forName: Notification.Name("didTapNotLike"), object: nil, queue: nil, using: didTapNotLike)
     }
@@ -43,26 +55,26 @@ class LikedMovieState {
         self.removeMovie(movie_to_delete: movieToDelete)
     }
     
-    
+    /*
     @objc func didTapChangeGenreFilter(_ notification: Notification) -> Void{
         let id = GenreListState.shared.findGenreId(with: notification.userInfo!["filtername"] as? String ?? "action")
         filteredMovies = self.LikedMovies.filter({ $0.genreIDs.contains(id)})
         //TODO how to add filter ??
         NotificationCenter.default.post(name: NSNotification.Name("reloadFilteredCells"), object: nil)
-    }
+    }*/
     
     func saveMovieList(){
         let movie_save = self.LikedMovies.map {
             [
-                "id" : $0.id,
-                "title": $0.title,
-                "posterPath": $0.posterPath,
-                "overview": $0.overview,
-                "voteAverage" : $0.voteAverage,
-                "releaseDate" : $0.releaseDate,
-                "liked" : $0.liked,
-                "genreIDs": $0.genreIDs
-            
+                    "id" : $0.id,
+                    "title": $0.title,
+                    "posterPath": $0.posterPath,
+                    "overview": $0.overview,
+                    "voteAverage" : $0.voteAverage,
+                    "releaseDate" : $0.releaseDate,
+                    "liked" : $0.liked,
+                    "genreIDs": $0.genreIDs
+                
             ]
         }
         
@@ -71,24 +83,26 @@ class LikedMovieState {
     }
     
     func addMovie(newMovie : Movie){
-        LikedMovies.append(newMovie)
-        self.saveMovieList()
+        if !LikedMovies.contains( where: {$0.id == newMovie.id} ){
+            self.LikedMovies.append(newMovie)
+        }
     }
     
     func removeMovie(movie_to_delete: Movie){
         if LikedMovies.contains( where: {$0.id == movie_to_delete.id} ){
             let index = LikedMovies.firstIndex(where: {$0.id == movie_to_delete.id})!
-            LikedMovies.remove(at: index)
-            self.saveMovieList()
+            self.LikedMovies.remove(at: index)
         }else{
             print("trying to unlike an unsaved movie")
         }
     }
     
+    
     func loadMovieList(){
         let userDefaults = UserDefaults.standard
         guard let movie_save = userDefaults.object(forKey: "likedMovieList") as? [[String: Any]] else {return}
-        self.LikedMovies = movie_save.compactMap{
+        
+        let savedMovies : [Movie] = movie_save.compactMap{
             guard let id = $0["id"] as? Int else { return nil}
             guard let title = $0["title"] as? String else {return nil}
             guard let posterPath = $0["posterPath"] as? String? else {return nil}
@@ -100,10 +114,11 @@ class LikedMovieState {
             
             return Movie(id: id, title: title, posterPath: posterPath, overview: overview, voteAverage: voteAverage, releaseDate: releaseDate, liked: liked, genreIDs: genreIDs)
         }
+        self.moviesObservable.accept(savedMovies)
+        LikedMovies = savedMovies
     }
     
-    func filterList(with genreName: String){
-        
-    }
+    
     
 }
+

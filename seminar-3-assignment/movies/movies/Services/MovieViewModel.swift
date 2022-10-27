@@ -13,46 +13,6 @@ import Foundation
     func searchMovie(query: String, completion: @escaping(Result<MovieResponse, MovieError>) -> ()  )
 }*/
 
-struct MovieViewModel{
-    private let my_movie : Movie
-    
-    var id : Int {
-        return my_movie.id
-    }
-    
-    var title : String {
-        return my_movie.title
-    }
-    
-    var posterPath : String? {
-        return my_movie.posterPath
-    }
-    
-    var overview : String {
-        return my_movie.overview
-    }
-    
-    var voteAverage : Double {
-        return my_movie.voteAverage
-    }
-    
-    var releaseDate : String {
-        return my_movie.releaseDate
-    }
-    
-    var liked : Bool {
-        return my_movie.liked
-    }
-    
-    var genreIDs : [Int] {
-        return my_movie.genreIDs
-    }
-    
-    init(movie: Movie){
-        self.my_movie = movie
-    }
-    
-}
 
 enum MovieListEndPoint: String{
     //popular, top rated

@@ -8,33 +8,32 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
+import RxDataSources
 
 
-class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout{
+class HomeViewController: UIViewController{
     
     private let bag = DisposeBag()
     
     private let defaults = UserDefaults.standard
     private var endPoint = MovieListEndPoint.popular
-    var endPointState = MovieListState.shared
     
-
     
     private let item: CustomTabItem
     let titleLabel = UILabel()
     let headerLabel = UILabel()
     let profilePic = UIButton()
     let searchBar = UISearchBar()
-   
-    
+
     var codeSegmented = CustomSegmentedControl(buttonTitle: ["Popular","Top Rated"])
     
     let recentButton = UIButton()
     let popularButton = UIButton()
-    var movieListView: UICollectionView!
-    let layout = UICollectionViewFlowLayout()
     
-    
+    var popularCollectionView = PopularMoviesViewController()
+    var TopRatedCollectionView = TopRatedMoviesViewController()
+   
     init(item: CustomTabItem) {
             self.item = item
             super.init(nibName: nil, bundle: nil)
@@ -45,12 +44,12 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout{
         }
 
     override func viewDidLoad() {
-        
+
+        NotificationCenter.default.addObserver(forName: Notification.Name("changedFilter"), object: nil, queue: nil, using: didTapChangeFilter)
         super.viewDidLoad()
-        endPointState.loadMovies(with: endPoint)
-        //print(endPointState.movies[0].title)
+        
         GenreListState.shared.loadGenres()
-        //print(GenreListState.shared.genres?[0].name)
+        print(GenreListState.shared.genres?[0].name)
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.view.backgroundColor = Styles.backgroundBlue
@@ -58,94 +57,50 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout{
         self.view.addSubview(headerLabel)
         self.view.addSubview(profilePic)
         self.view.addSubview(searchBar)
-        //self.view.addSubview(categoryLabel)
-        //self.view.addSubview(categoryStack)
         self.view.addSubview(codeSegmented)
-        movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        self.movieListView.register(MoviesListCollectionViewCell.self, forCellWithReuseIdentifier: "MoviesListCollectionViewCell")
-        bind()
-        self.view.addSubview(movieListView)
         
+        //우선은 popular 부터 보여짐.
+        self.add(TopRatedCollectionView)
+        self.TopRatedCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
+        self.add(popularCollectionView)
+        self.popularCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
+        TopRatedCollectionView.view.isHidden = true
         configureHeader()
         configureSearchBar()
         configureSegmentedControl()
-        configureMovieList()
-    }
-    
-    
-    /*
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MoviesListCollectionViewCell", for: indexPath) as! MoviesListCollectionViewCell
         
-        guard let movie = self.endPointState.movies[indexPath.row] else { return UICollectionViewCell() }
-        cell.configureMovie(movie)
-        return cell
-    }*/
-    
-    func bind(){
-        movieListView.rx.setDelegate(self)
-            .disposed(by: bag)
-        let moviesObservable = self.endPointState.getObservable()
-        
-        //let moviesObservable = self.endPointState.getObservable()
-        //moviesObservable.retry()
-        moviesObservable
-            .bind(to: movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in
-                cell.configureMovie(movie)
-            }
-            .disposed(by: bag)
-        
-        movieListView.rx.itemSelected
-            .subscribe(onNext: { index in
-                let VC = MovieDetailViewController(movie: (self.endPointState.movies[index.item]))
-                self.navigationController?.pushViewController(VC, animated: true)
-            })
-            .disposed(by: bag)
-    }
-    
-    //pagination
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            let offsetY = scrollView.contentOffset.y
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+         self.endPoint = MovieListEndPoint.topRated
+         self.TopRatedCollectionView.view.isHidden = false
+            self.popularCollectionView.view.isHidden = true
+        }
 
-        if offsetY > (self.movieListView.contentSize.height - 100 - scrollView.frame.size.height){
-            self.endPointState.appendMovies(with: self.endPoint)
-           
-            DispatchQueue.main.async {
-                //self.bind()
-            }
-            }
+        
     }
     
-    func configureMovieList(){
-        layout.scrollDirection = .vertical
-        movieListView.setCollectionViewLayout(layout, animated: true)
-        //movieListView.dataSource = self
-        movieListView.showsVerticalScrollIndicator = false
-        //movieListView.delegate = self
-        movieListView.backgroundColor = .clear
-        movieListView.translatesAutoresizingMaskIntoConstraints = false
-        movieListView.topAnchor.constraint(equalTo: self.codeSegmented.bottomAnchor, constant: 20).isActive = true
-        movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 24).isActive = true
-        movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
-        movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        //TODO: add shadow..or something ..scrolling looks ugly
+   
+
+}
+
+public extension UIViewController {
+
+    /// Adds child view controller to the parent.
+    /// - Parameter child: Child view controller.
+    func add(_ child: UIViewController) {
+        addChild(child)
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (collectionView.frame.width-24)/2, height: 250)
+
+    /// It removes the child view controller from the parent.
+    func remove() {
+        guard parent != nil else {
+            return
+        }
+        willMove(toParent: nil)
+        removeFromParent()
+        view.removeFromSuperview()
     }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.endPointState.movies.count
-    }
-    
-    /*
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let VC = MovieDetailViewController(movie: (endPointState.movies[indexPath.item]))
-        self.navigationController?.pushViewController(VC, animated: true)
-    }*/
-    
-    
 }
 
 extension HomeViewController {
@@ -157,7 +112,6 @@ extension HomeViewController {
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.titleLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 60).isActive = true
         self.titleLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
-        
         
         self.headerLabel.text = "Let's relax and watch a movie!"
         self.headerLabel.textColor = .white
@@ -171,6 +125,7 @@ extension HomeViewController {
         self.profilePic.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -24).isActive = true
         self.profilePic.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 60).isActive = true
     }
+    
     
     func configureSearchBar(){
         self.searchBar.backgroundColor = UIColor(red: 39/255.0, green: 40/255.0, blue: 51/255.0, alpha: 1.0)
@@ -187,35 +142,41 @@ extension HomeViewController {
         self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
         self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,constant: -24).isActive = true
         self.searchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
-
     }
-    
 
     //view switch with segmeneted control
     func configureSegmentedControl(){
-        //need to add target to segmented control
         codeSegmented.backgroundColor = .clear
         self.codeSegmented.translatesAutoresizingMaskIntoConstraints = false
         self.codeSegmented.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 25).isActive = true
         self.codeSegmented.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25).isActive = true
         self.codeSegmented.heightAnchor.constraint(equalToConstant: 23).isActive = true
         self.codeSegmented.widthAnchor.constraint(greaterThanOrEqualToConstant: 180).isActive = true
-        NotificationCenter.default.addObserver(forName: Notification.Name("changedFilter"), object: nil, queue: nil, using: didTapChangeFilter)
+        
+        
         
     }
     
-    @objc func didTapChangeFilter(_ notification: Notification) -> Void{
+    @objc func didTapChangeFilter(_ notification: Notification) -> (){
+        print("did tap change filter")
         if (codeSegmented.selectedIndex == 0){
             self.endPoint = MovieListEndPoint.popular
+            self.TopRatedCollectionView.view.isHidden = true
+           self.popularCollectionView.view.isHidden = false
+                
+            
         }else if (codeSegmented.selectedIndex == 1){
             self.endPoint = MovieListEndPoint.topRated
+            self.popularCollectionView.view.isHidden = true
+         self.TopRatedCollectionView.view.isHidden = false
+            
+            
+
         }
         
-        endPointState.initParams()
-        self.endPointState.loadMovies(with: self.endPoint)
-        self.movieListView.reloadData()
         
     }
+    
 }
 
 

@@ -6,9 +6,13 @@
 //
 
 import UIKit
+import RxCocoa
+import RxSwift
+import RxDataSources
 
 class MoviesListCollectionViewCell: UICollectionViewCell {
-   // static let identifier = "MoviesListCollectionViewCell"
+   var cellDisposeBag = DisposeBag()
+    
     var my_movie : Movie?
     var posterView = UIImageView()
     var ratingLabel = UILabel()

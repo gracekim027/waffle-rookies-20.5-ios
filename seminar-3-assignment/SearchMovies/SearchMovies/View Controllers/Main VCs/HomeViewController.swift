@@ -33,6 +33,7 @@ class HomeViewController: UIViewController{
     
     var popularCollectionView = PopularMoviesViewController()
     var TopRatedCollectionView = TopRatedMoviesViewController()
+    var searchCollectionView = SearchMoviesViewController()
    
     init(item: CustomTabItem) {
             self.item = item
@@ -65,7 +66,10 @@ class HomeViewController: UIViewController{
         self.TopRatedCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
         self.add(popularCollectionView)
         self.popularCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
+        self.add(searchCollectionView)
+        self.searchCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
         TopRatedCollectionView.view.isHidden = true
+        searchCollectionView.view.isHidden = true
         configureHeader()
         configureSearchBar()
         configureSegmentedControl()
@@ -73,9 +77,15 @@ class HomeViewController: UIViewController{
             button.addTarget(self, action: #selector(didTapChangeFilter), for: .touchUpInside)
         }
         
+        self.searchBar.searchTextField.addTarget(self, action: #selector(searchBarActivate), for: .editingDidBegin)
+        
     }
     
-   
+    @objc func searchBarActivate(){
+        
+    }
+
+
 
 }
 

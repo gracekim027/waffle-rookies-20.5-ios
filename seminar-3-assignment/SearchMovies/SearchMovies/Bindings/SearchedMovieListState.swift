@@ -54,9 +54,9 @@ class SearchedMovieListState {
     }
     }
    
-    func appendMovies(with endPoint: MovieListEndPoint){
+    func appendMovies(with query: String){
         self.page = self.page + 1
-        RootViewModel.shared.fetchMovies(from: endPoint, pageNum: self.page) { [weak self] (result) in
+        RootViewModel.shared.searchMovie(from: query) { [weak self] (result) in
         guard let self = self else { return }
         switch result {
         case .success(let response):

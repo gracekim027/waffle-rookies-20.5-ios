@@ -12,8 +12,6 @@ class MovieGenreCollectionViewCell: UICollectionViewCell {
     var emojiLabel = UILabel()
     var nameLabel = UILabel()
    
-   
-    
     
     override var reuseIdentifier: String {
         return "MovieGenreCollectionViewCell"

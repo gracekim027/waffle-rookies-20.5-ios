@@ -135,7 +135,6 @@ class MovieDetailViewController: UIViewController {
         self.posterView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 110).isActive = true
         self.posterView.heightAnchor.constraint(equalToConstant: 325.26).isActive = true
         self.posterView.contentMode = .scaleAspectFill
-        
         self.posterView.layer.masksToBounds = true
     }
     

@@ -12,4 +12,6 @@ pod 'RxCocoa'
 pod 'RxDataSources', '~> 5.0'
 pod 'RxGesture'
 pod 'SnapKit', '~> 5.0.0'
+pod 'SkeletonView'
+
 end

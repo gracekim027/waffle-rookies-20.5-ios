@@ -9,6 +9,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import RxDataSources
+import SkeletonView
 
 class MoviesListCollectionViewCell: UICollectionViewCell {
    var cellDisposeBag = DisposeBag()
@@ -18,7 +19,6 @@ class MoviesListCollectionViewCell: UICollectionViewCell {
     var ratingLabel = UILabel()
     var titleLabel = UILabel()
     //question: difference of using var and let in cell?
-    
     
     override var reuseIdentifier: String {
         return "MoviesListCollectionViewCell"
@@ -32,6 +32,7 @@ class MoviesListCollectionViewCell: UICollectionViewCell {
         self.contentView.addSubview(titleLabel)
         configureImage()
         configureTitle()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -60,6 +61,7 @@ class MoviesListCollectionViewCell: UICollectionViewCell {
         self.posterView.heightAnchor.constraint(equalToConstant: 223).isActive = true
         self.posterView.contentMode = .scaleToFill
         self.posterView.layer.masksToBounds = true
+        self.posterView.showGradientSkeleton()
         
         self.posterView.addSubview(ratingLabel)
         ratingLabel.layer.cornerRadius = 8

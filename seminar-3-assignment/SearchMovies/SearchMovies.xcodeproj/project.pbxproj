@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		65BCD186290AD9AF00C80A15 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65BCD184290AD9AF00C80A15 /* LaunchScreen.storyboard */; };
 		65BCD1B4290ADB4F00C80A15 /* TopRatedMoviesListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCD18E290ADB4E00C80A15 /* TopRatedMoviesListState.swift */; };
 		65BCD1B5290ADB4F00C80A15 /* PopularMoviesListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCD18F290ADB4E00C80A15 /* PopularMoviesListState.swift */; };
 		65BCD1B6290ADB4F00C80A15 /* SearchedMovieListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCD190290ADB4E00C80A15 /* SearchedMovieListState.swift */; };
@@ -34,6 +33,7 @@
 		65BCD1CD290ADB4F00C80A15 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCD1B0290ADB4F00C80A15 /* Genre.swift */; };
 		65BCD1CE290ADB4F00C80A15 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCD1B2290ADB4F00C80A15 /* RootViewModel.swift */; };
 		65BCD1CF290ADB4F00C80A15 /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCD1B3290ADB4F00C80A15 /* MovieViewModel.swift */; };
+		65BCD1D1290AF6BA00C80A15 /* SearchMoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCD1D0290AF6BA00C80A15 /* SearchMoviesViewController.swift */; };
 		CE95C43EF23DC72736CE1A58 /* Pods_SearchMovies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05ADED8729246AF56EE12D25 /* Pods_SearchMovies.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,7 +41,6 @@
 		05ADED8729246AF56EE12D25 /* Pods_SearchMovies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SearchMovies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F4186BCA311BDC75E4569F7 /* Pods-SearchMovies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SearchMovies.release.xcconfig"; path = "Target Support Files/Pods-SearchMovies/Pods-SearchMovies.release.xcconfig"; sourceTree = "<group>"; };
 		65BCD176290AD9AD00C80A15 /* SearchMovies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SearchMovies.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		65BCD185290AD9AF00C80A15 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		65BCD187290AD9AF00C80A15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65BCD18E290ADB4E00C80A15 /* TopRatedMoviesListState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopRatedMoviesListState.swift; sourceTree = "<group>"; };
 		65BCD18F290ADB4E00C80A15 /* PopularMoviesListState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularMoviesListState.swift; sourceTree = "<group>"; };
@@ -69,6 +68,7 @@
 		65BCD1B0290ADB4F00C80A15 /* Genre.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		65BCD1B2290ADB4F00C80A15 /* RootViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		65BCD1B3290ADB4F00C80A15 /* MovieViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
+		65BCD1D0290AF6BA00C80A15 /* SearchMoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMoviesViewController.swift; sourceTree = "<group>"; };
 		969E43E73C7FBBC74F1415FA /* Pods-SearchMovies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SearchMovies.debug.xcconfig"; path = "Target Support Files/Pods-SearchMovies/Pods-SearchMovies.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,7 +105,6 @@
 		65BCD178290AD9AD00C80A15 /* SearchMovies */ = {
 			isa = PBXGroup;
 			children = (
-				65BCD184290AD9AF00C80A15 /* LaunchScreen.storyboard */,
 				65BCD193290ADB4E00C80A15 /* Assets.xcassets */,
 				65BCD18D290ADB4E00C80A15 /* Bindings */,
 				65BCD19B290ADB4E00C80A15 /* Cells */,
@@ -176,6 +175,7 @@
 				65BCD1A6290ADB4E00C80A15 /* TopRatedMoviesViewController.swift */,
 				65BCD1A7290ADB4E00C80A15 /* PopularMoviesViewController.swift */,
 				65BCD1A8290ADB4E00C80A15 /* MovieDetailViewController.swift */,
+				65BCD1D0290AF6BA00C80A15 /* SearchMoviesViewController.swift */,
 			);
 			path = "Main VCs";
 			sourceTree = "<group>";
@@ -287,7 +287,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				65BCD1B9290ADB4F00C80A15 /* Assets.xcassets in Resources */,
-				65BCD186290AD9AF00C80A15 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +343,7 @@
 				65BCD1B5290ADB4F00C80A15 /* PopularMoviesListState.swift in Sources */,
 				65BCD1CD290ADB4F00C80A15 /* Genre.swift in Sources */,
 				65BCD1C9290ADB4F00C80A15 /* AppDelegate.swift in Sources */,
+				65BCD1D1290AF6BA00C80A15 /* SearchMoviesViewController.swift in Sources */,
 				65BCD1BA290ADB4F00C80A15 /* CustomTabItem.swift in Sources */,
 				65BCD1C6290ADB4F00C80A15 /* PopularMoviesViewController.swift in Sources */,
 				65BCD1B7290ADB4F00C80A15 /* GenreListState.swift in Sources */,
@@ -369,17 +369,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		65BCD184290AD9AF00C80A15 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				65BCD185290AD9AF00C80A15 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		65BCD188290AD9AF00C80A15 /* Debug */ = {

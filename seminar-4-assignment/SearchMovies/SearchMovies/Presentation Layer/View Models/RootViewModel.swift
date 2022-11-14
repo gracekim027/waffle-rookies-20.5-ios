@@ -20,13 +20,13 @@ class RootViewModel {
     
     private init() {}
     
+    
     static let shared = RootViewModel()
     private let apiKey = "f330b07acf479c98b184db47a4d2608b"
     private let baseAPIURL = "https://api.themoviedb.org/3"
     private let urlSession = URLSession.shared
     var page : Int = 1
     var movies : [Movie] = []
-    
     
     //for when popular & top_rated
     func fetchMovies(from endpoint: MovieListEndPoint, pageNum: Int, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
@@ -41,16 +41,14 @@ class RootViewModel {
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
         guard error == nil else {
-            print("something went wrong")
+            print(String(describing: error))
             return }
         guard let data = data else {
             semaphore.signal()
             return
         }
         do {
-            //print("point 3")
             let results : MovieResponse = try JSONDecoder().decode(MovieResponse.self, from: data)
-            //print(results.results[0].title) --> 여기까지됨.
             completion(.success(results))
             semaphore.signal()
             } catch {
@@ -70,7 +68,7 @@ class RootViewModel {
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
         guard error == nil else {
-            print("something went wrong")
+            print(String(describing: error))
             return }
         guard let data = data else {
             return
@@ -80,8 +78,6 @@ class RootViewModel {
             DispatchQueue.main.async() {
             completion(.success(result))
                 }
-           
-            //print(result.title)
             
         } catch {
             print(url)
@@ -144,39 +140,6 @@ class RootViewModel {
         }
         task.resume()
         semaphore.wait()
-    }
-    
-    private func loadURLAndDecode<D: Decodable>(url: URL, completion: @escaping (Result<D, MovieError>) -> ()){
-        urlSession.dataTask(with: url) { [weak self] (data, response, error) in
-            guard let self = self else {return}
-            if error != nil {
-                self.executeCompletionHandlerMainThread(wth: .failure(.apiError), completion: completion)
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-                self.executeCompletionHandlerMainThread(wth: .failure(.invalidResponse), completion: completion)
-                return
-            }
-            
-            guard let data = data else {
-                self.executeCompletionHandlerMainThread(wth: .failure(.noData), completion: completion)
-                return
-            }
-            
-            do {
-                let decodedResponse = try JSONDecoder().decode(D.self, from: data)
-                self.executeCompletionHandlerMainThread(wth: .success(decodedResponse), completion: completion)
-            }catch {
-                self.executeCompletionHandlerMainThread(wth: .failure(.serializationError), completion: completion)
-            }
-        }
-    }
-    
-    private func executeCompletionHandlerMainThread<D: Decodable>(wth result: Result<D, MovieError>, completion: @escaping (Result<D, MovieError>) -> ()){
-        DispatchQueue.main.async {
-            completion(result)
-        }
     }
 
 }

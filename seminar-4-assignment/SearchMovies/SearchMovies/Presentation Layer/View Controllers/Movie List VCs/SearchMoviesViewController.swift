@@ -16,7 +16,6 @@ class SearchMoviesViewController: UIViewController, UICollectionViewDelegateFlow
     
     private let endPointState = SearchedMovieListState.shared
     
-    
     private var movieListView: UICollectionView!
     private var layout = UICollectionViewFlowLayout()
     private var searchQuery : String?

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Genre: Decodable {
     let id : Int
@@ -16,6 +17,7 @@ struct Genre: Decodable {
     }
 }
 
+//genre response
 struct GenreDict : Decodable {
     let genres : [Genre]
     

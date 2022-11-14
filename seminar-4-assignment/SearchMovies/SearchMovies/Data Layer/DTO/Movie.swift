@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 import RxDataSources
 
-
 struct MovieResponse : Decodable{
     let results : [Movie]
     

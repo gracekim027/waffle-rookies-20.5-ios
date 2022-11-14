@@ -20,7 +20,6 @@ class RootViewModel {
     
     private init() {}
     
-    
     static let shared = RootViewModel()
     private let apiKey = "f330b07acf479c98b184db47a4d2608b"
     private let baseAPIURL = "https://api.themoviedb.org/3"

@@ -16,7 +16,7 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
     private var endPoint = MovieListEndPoint.popular
     
     private let endPointState = PopularMoviesListState.shared
-    private var movieListView: UICollectionView!
+    var movieListView: UICollectionView!
     private var layout = UICollectionViewFlowLayout()
 
     override func viewDidLoad() {
@@ -35,7 +35,6 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
 
         movieListView.register(MoviesListCollectionViewCell.self, forCellWithReuseIdentifier: "MoviesListCollectionViewCell")
         
-            // Put your code which should be executed with a delay here
             self.endPointState.moviesObservables
                 .observe(on: MainScheduler.instance)
                 .bind(to: self.movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in

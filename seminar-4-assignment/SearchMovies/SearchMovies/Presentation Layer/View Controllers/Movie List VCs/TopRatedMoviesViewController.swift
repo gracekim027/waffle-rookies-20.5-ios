@@ -16,7 +16,7 @@ class TopRatedMoviesViewController: UIViewController, UICollectionViewDelegateFl
     private var endPoint = MovieListEndPoint.topRated
     
     private let endPointState = TopRatedMoviesListState.shared
-    private var movieListView: UICollectionView!
+    var movieListView: UICollectionView!
     private var layout = UICollectionViewFlowLayout()
 
     override func viewDidLoad() {

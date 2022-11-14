@@ -5,11 +5,12 @@
 //  Created by grace kim  on 2022/11/14.
 //
 
+//question: if there has to be a view model for each use case 이거 왜 하는거임?
+
 import Foundation
 
 protocol MovieListViewModelInput {
     func didSelect(at indexPath: IndexPath)
-    func didSearchEndpoint(with movieListEndPoint : MovieListEndPoint)
 }
 
 protocol MovieListViewModelOutput {
@@ -20,24 +21,25 @@ protocol MovieListViewModelProtocol : MovieListViewModelInput, MovieListViewMode
     
 }
 
+struct MovieListViewModelActions {
+    let showMovieDetails: (Movie) -> Void
+}
+
 final class MovieListViewModel : MovieListViewModelProtocol {
     
     //should be dependent to use case and have a use case (search movies use case)
-    private let searchMoviesUseCase : SearchMoviesUseCase
+    private let popularMoviesUseCase : PopularMoviesUseCase
+    private let actions : MovieListViewModelActions?
     
-    init (searchMoviesUseCase : SearchMoviesUseCase){
-        self.searchMoviesUseCase = searchMoviesUseCase
+    private var movies:[Movie] = []
+    
+    init (popularMoviesUseCase : PopularMoviesUseCase, actions: MovieListViewModelActions){
+        self.popularMoviesUseCase = popularMoviesUseCase
+        self.actions = actions
     }
     
     func didSelect(at indexPath: IndexPath) {
-        <#code#>
+        actions?.showMovieDetails(movies[indexPath.row])
     }
-    
-    func didSearchEndpoint(with movieListEndPoint: MovieListEndPoint) {
-        <#code#>
-    }
-    
-   
-    
     
 }

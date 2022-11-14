@@ -11,33 +11,32 @@ import RxCocoa
 
 class MovieDetailViewController: UIViewController {
 
-    var my_movie : Movie
+    private var my_movie : Movie
 
-    var posterView = UIImageView()
+    private var posterView = UIImageView()
     
-    var titleLabel = UILabel()
-    var divider = UILabel()
+    private var titleLabel = UILabel()
+    private var divider = UILabel()
     
-    var icon = UIImageView()
-    var genreLabel = UILabel()
-    var realGenre = UILabel()
-    var genreView = UIView()
+    private var icon = UIImageView()
+    private var genreLabel = UILabel()
+    private var realGenre = UILabel()
+    private var genreView = UIView()
     
-    var icon2 = UIImageView()
-    var relaseYear = UILabel()
-    var realYear = UILabel()
-    var yearView = UIView()
+    private var icon2 = UIImageView()
+    private var relaseYear = UILabel()
+    private var realYear = UILabel()
+    private var yearView = UIView()
     
-    var icon3 = UIImageView()
-    var rating = UILabel()
-    var likeButton = UIButton()
-    var ratingView = UIView()
-    var realRating = UILabel()
+    private var icon3 = UIImageView()
+    private var rating = UILabel()
+    private var likeButton = UIButton()
+    private var ratingView = UIView()
+    private var realRating = UILabel()
     
-    var summaryTitle = UILabel()
-    var summaryLabel = UILabel()
+    private var summaryTitle = UILabel()
+    private var summaryLabel = UILabel()
    
-    
     init(movie : Movie){
         self.my_movie = movie
         let posterURL = URL(string: "https://image.tmdb.org/t/p/original\(movie.posterPath ?? "")")!
@@ -54,7 +53,6 @@ class MovieDetailViewController: UIViewController {
         self.summaryLabel.text = movie.overview
         
         if (LikedMovieState.shared.LikedMovies.contains( where: {$0.id == movie.id} )){
-            //계속 서치하는건 진짜 너무 시간적 낭비 아닌가
             likeButton.isSelected = true
         }else{
             likeButton.isSelected = false
@@ -75,27 +73,13 @@ class MovieDetailViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         
-        
-        likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
-        likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
-        
-        let like = UIBarButtonItem(customView: likeButton)
-        like.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -24)
-        self.navigationItem.setRightBarButton(like, animated: true)
-        
-        
-        
-        let backButtonBackgroundImage = UIImage(systemName: "chevron.backward")
-        self.navigationController?.navigationBar.backIndicatorImage = backButtonBackgroundImage
-        self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = backButtonBackgroundImage
-        
-        let backBarButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        self.navigationItem.backBarButtonItem = backBarButton
-        self.navigationItem.backButtonTitle = ""
-        //TODO: 진짜 죽어도 안 사라지는데?
         self.view.backgroundColor = Styles.backgroundBlue
+        addSubviews()
+        configureSubviews()
         
+    }
+    
+    private func addSubviews(){
         self.view.addSubview(posterView)
         self.view.addSubview(titleLabel)
         self.view.addSubview(divider)
@@ -106,11 +90,39 @@ class MovieDetailViewController: UIViewController {
         
         self.view.addSubview(summaryTitle)
         self.view.addSubview(summaryLabel)
-        
+    }
+    
+    private func configureSubviews(){
+        configureTabButtons()
         configurePosterView()
         configureSubLabels()
         configureSummary()
     }
+    
+    
+    //--------configure subviews------------
+    
+    private func configureTabButtons(){
+        likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+        likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
+        
+        let like = UIBarButtonItem(customView: likeButton)
+        like.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -24)
+        self.navigationItem.setRightBarButton(like, animated: true)
+        likeButton.tintColor = .white
+        
+        
+        let backButtonBackgroundImage = UIImage(systemName: "chevron.backward")
+        self.navigationController?.navigationBar.backIndicatorImage = backButtonBackgroundImage
+        self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = backButtonBackgroundImage
+        
+        let backBarButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem = backBarButton
+        self.navigationItem.backButtonTitle = ""
+        self.navigationItem.backBarButtonItem?.tintColor = .white
+    }
+    
     
     @objc func didTapLike(){
         if (self.my_movie.liked == false){

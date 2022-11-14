@@ -143,7 +143,6 @@
 			children = (
 				65BCD196290ADB4E00C80A15 /* CustomTabItem.swift */,
 				65BCD197290ADB4E00C80A15 /* CustomItemView.swift */,
-				65BCD198290ADB4E00C80A15 /* Extensions.swift */,
 				65BCD199290ADB4E00C80A15 /* CustomTabBar.swift */,
 			);
 			path = "Custom Tab Bar";
@@ -161,6 +160,8 @@
 		65BCD19E290ADB4E00C80A15 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				65BCD1AA290ADB4E00C80A15 /* CustomTabBarController.swift */,
+				65D298952922065E00B949A6 /* Movie List VCs */,
 				65BCD1A3290ADB4E00C80A15 /* Main VCs */,
 				65BCD1A9290ADB4E00C80A15 /* Extra */,
 			);
@@ -172,10 +173,7 @@
 			children = (
 				65BCD1A4290ADB4E00C80A15 /* FavoritesViewController.swift */,
 				65BCD1A5290ADB4E00C80A15 /* HomeViewController.swift */,
-				65BCD1A6290ADB4E00C80A15 /* TopRatedMoviesViewController.swift */,
-				65BCD1A7290ADB4E00C80A15 /* PopularMoviesViewController.swift */,
 				65BCD1A8290ADB4E00C80A15 /* MovieDetailViewController.swift */,
-				65BCD1D0290AF6BA00C80A15 /* SearchMoviesViewController.swift */,
 			);
 			path = "Main VCs";
 			sourceTree = "<group>";
@@ -183,7 +181,7 @@
 		65BCD1A9290ADB4E00C80A15 /* Extra */ = {
 			isa = PBXGroup;
 			children = (
-				65BCD1AA290ADB4E00C80A15 /* CustomTabBarController.swift */,
+				65BCD198290ADB4E00C80A15 /* Extensions.swift */,
 				65BCD1AB290ADB4E00C80A15 /* AppDelegate.swift */,
 				65BCD1AC290ADB4E00C80A15 /* SceneDelegate.swift */,
 			);
@@ -207,6 +205,16 @@
 				65BCD1B3290ADB4F00C80A15 /* MovieViewModel.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		65D298952922065E00B949A6 /* Movie List VCs */ = {
+			isa = PBXGroup;
+			children = (
+				65BCD1D0290AF6BA00C80A15 /* SearchMoviesViewController.swift */,
+				65BCD1A7290ADB4E00C80A15 /* PopularMoviesViewController.swift */,
+				65BCD1A6290ADB4E00C80A15 /* TopRatedMoviesViewController.swift */,
+			);
+			path = "Movie List VCs";
 			sourceTree = "<group>";
 		};
 		926576F31C6C86AB57BF957C /* Frameworks */ = {

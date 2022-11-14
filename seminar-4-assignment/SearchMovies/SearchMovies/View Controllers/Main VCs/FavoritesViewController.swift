@@ -11,42 +11,65 @@ import RxSwift
 
 class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLayout{
     
-    
     private let bag = DisposeBag()
     
     private var likedMovieState = LikedMovieState.shared
-   
 
-
-    var titleLabel = UILabel()
-    var categoryStackLabel = UILabel()
+    private var titleLabel = UILabel()
+    private var categoryStackLabel = UILabel()
     
-    let headerLabel = UILabel()
-    let profilePic = UIButton()
-    var movieListView: UICollectionView!
-    var genreListView: UICollectionView!
-    let layout = UICollectionViewFlowLayout()
-    let layout2 = UICollectionViewFlowLayout()
-    private let item : CustomTabItem
+    private var headerLabel = UILabel()
+    private var profilePic = UIButton()
+    private var movieListView: UICollectionView!
+    private var genreListView: UICollectionView!
+    private var layout = UICollectionViewFlowLayout()
+    private var layout2 = UICollectionViewFlowLayout()
+    private var item : CustomTabItem
     
     init(item: CustomTabItem) {
         self.item = item
         super.init(nibName: nil, bundle: nil)
         }
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
     
-    func bind(){
-        movieListView.rx.setDelegate(self)
-            .disposed(by: bag)
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+        
+    }
+    
+    
+    override func viewDidLoad() {
+        self.view.backgroundColor = Styles.backgroundBlue
+        likedMovieState.loadMovieList()
+        super.viewDidLoad()
+        self.bind()
+        addSubviews()
+        configureSubviews()
+    }
+    
+    private func addSubviews(){
+        self.view.addSubview(headerLabel)
+        self.view.addSubview(profilePic)
+        self.view.addSubview(titleLabel)
+        self.view.addSubview(categoryStackLabel)
+        self.view.addSubview(movieListView)
+        self.view.addSubview(genreListView)
+    }
+    
+    private func bind(){
+        
+        //-----cell register-----
+        movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        self.movieListView.register(MoviesListCollectionViewCell.self, forCellWithReuseIdentifier: "MoviesListCollectionViewCell")
+         
+         genreListView = UICollectionView(frame: .zero, collectionViewLayout: layout2)
+         self.genreListView.register(MovieGenreCollectionViewCell.self, forCellWithReuseIdentifier: "MovieGenreCollectionViewCell")
+
+        //-----binding for genre collection view----
         genreListView.rx.setDelegate(self)
             .disposed(by: bag)
         
-        
         let genreObservable = Observable.of(self.genresToSave)
-
         genreObservable
             .observe(on: MainScheduler.instance)
             .bind(to: genreListView.rx.items(cellIdentifier: "MovieGenreCollectionViewCell", cellType: MovieGenreCollectionViewCell.self))
@@ -65,6 +88,10 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
             })
         
         
+        //-----binding for liked movie collection view----
+        movieListView.rx.setDelegate(self)
+            .disposed(by: bag)
+        
         self.likedMovieState.moviesObserver
             .observe(on: MainScheduler.instance)
             .bind(to: movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in
@@ -80,38 +107,15 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
             .disposed(by: bag)
     }
     
-    
-    
-    override func viewDidLoad() {
-      
-      
-        self.view.backgroundColor = Styles.backgroundBlue
-        likedMovieState.loadMovieList()
-        super.viewDidLoad()
-        self.view.addSubview(headerLabel)
-        self.view.addSubview(profilePic)
-        self.view.addSubview(titleLabel)
-        self.view.addSubview(categoryStackLabel)
+    private func configureSubviews(){
         configureSubLabels()
-        
-       movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-       self.movieListView.register(MoviesListCollectionViewCell.self, forCellWithReuseIdentifier: "MoviesListCollectionViewCell")
-        
-        genreListView = UICollectionView(frame: .zero, collectionViewLayout: layout2)
-        self.genreListView.register(MovieGenreCollectionViewCell.self, forCellWithReuseIdentifier: "MovieGenreCollectionViewCell")
-        self.bind()
-       self.view.addSubview(movieListView)
-        self.view.addSubview(genreListView)
         configureGenreListView()
         configureMovieListView()
-        
-        // Do any additional setup after loading the view.
     }
     
     
-    
-    func configureSubLabels(){
-        
+    //---configure subviews-----
+    private func configureSubLabels(){
         self.headerLabel.text = "Welcome User! 👋"
         self.headerLabel.textColor = Styles.darkGrey
         self.headerLabel.font = UIFont.systemFont(ofSize: 13, weight: .light)
@@ -124,7 +128,6 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         self.profilePic.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -24).isActive = true
         self.profilePic.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 60).isActive = true
 
-        
         self.titleLabel.text = "Your Favorites"
         self.titleLabel.textColor = .white
         self.titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
@@ -141,8 +144,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     }
     
    
-    
-    func configureGenreListView(){
+    private func configureGenreListView(){
         layout2.scrollDirection = .horizontal
         genreListView.setCollectionViewLayout(layout2, animated: true)
         genreListView.showsHorizontalScrollIndicator = false
@@ -152,24 +154,20 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         genreListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24).isActive = true
         genreListView.heightAnchor.constraint(equalToConstant: 72).isActive = true
         genreListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        //TODO: how to add padding?
         genreListView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
     }
     
-    func configureMovieListView(){
-        
+    
+    private func configureMovieListView(){
         layout.scrollDirection = .vertical
         movieListView.setCollectionViewLayout(layout, animated: true)
-        //movieListView.dataSource = self
         movieListView.showsVerticalScrollIndicator = false
-        //movieListView.delegate = self
         movieListView.backgroundColor = .clear
         movieListView.translatesAutoresizingMaskIntoConstraints = false
         movieListView.topAnchor.constraint(equalTo: self.genreListView.bottomAnchor, constant: 20).isActive = true
         movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 24).isActive = true
         movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
         movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        //TODO: add shadow to scrolling?
     }
     
     
@@ -181,9 +179,8 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         }
     }
     
-    let genresToSave =
+    private let genresToSave =
     [
-        
     ["all", "☺️"],
     ["action","😮‍💨"],
     ["comedy", "😝"],

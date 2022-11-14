@@ -15,19 +15,16 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
     
     private var endPoint = MovieListEndPoint.popular
     
-    var endPointState = PopularMoviesListState.shared
-    var movieListView: UICollectionView!
-    let layout = UICollectionViewFlowLayout()
+    private let endPointState = PopularMoviesListState.shared
+    private var movieListView: UICollectionView!
+    private var layout = UICollectionViewFlowLayout()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         endPointState.loadMovies(with: endPoint)
-        //print(endPointState.movies[0].title)
         movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.view.addSubview(movieListView)
         configureMovieList()
-        self.movieListView.setContentOffset(CGPoint(x:0,y:0), animated: true)
         self.bind()
     }
     
@@ -74,6 +71,7 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
         movieListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         movieListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        movieListView.setContentOffset(CGPoint(x:0,y:0), animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

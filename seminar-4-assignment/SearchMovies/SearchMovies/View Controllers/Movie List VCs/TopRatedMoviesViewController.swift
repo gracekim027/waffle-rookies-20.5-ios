@@ -1,40 +1,31 @@
 //
-//  SearchMoviesViewController.swift
-//  SearchMovies
+//  PopularMoviesViewController.swift
+//  movies
 //
-//  Created by grace kim  on 2022/10/28.
+//  Created by grace kim  on 2022/10/27.
 //
 
 import UIKit
 import RxCocoa
 import RxSwift
 
-class SearchMoviesViewController: UIViewController, UICollectionViewDelegateFlowLayout {
-
+class TopRatedMoviesViewController: UIViewController, UICollectionViewDelegateFlowLayout {
 
     private let bag = DisposeBag()
     
-    private var endPointState = SearchedMovieListState.shared
+    private var endPoint = MovieListEndPoint.topRated
     
-    
-    var movieListView: UICollectionView!
-    let layout = UICollectionViewFlowLayout()
-    var searchQuery : String?
-    
+    private let endPointState = TopRatedMoviesListState.shared
+    private var movieListView: UICollectionView!
+    private var layout = UICollectionViewFlowLayout()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(forName: Notification.Name("searchBarTapped"), object: nil, queue: nil, using: didTapSearch)
+        endPointState.loadMovies(with: endPoint)
         movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.view.addSubview(movieListView)
         configureMovieList()
-        self.movieListView.setContentOffset(CGPoint(x:0,y:0), animated: true)
         self.bind()
-    }
-    
-    @objc func didTapSearch(_ notification : Notification){
-        self.searchQuery = notification.userInfo!["query"] as? String ?? "error"
-        self.endPointState.loadSearchMovies(with: self.searchQuery!)
     }
     
     func bind(){
@@ -44,14 +35,14 @@ class SearchMoviesViewController: UIViewController, UICollectionViewDelegateFlow
 
         movieListView.register(MoviesListCollectionViewCell.self, forCellWithReuseIdentifier: "MoviesListCollectionViewCell")
         
-            // Put your code which should be executed with a delay here
-            self.endPointState.moviesObservable
-                .observe(on: MainScheduler.instance)
-                .bind(to: self.movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in
-                    cell.configureMovie(movie)
-                    //print(movie.title)
-                }
-                .disposed(by: self.bag)
+            
+        self.endPointState.moviesObservables
+            .observe(on: MainScheduler.instance)
+            .bind(to: self.movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in
+                cell.configureMovie(movie)
+                
+            }
+            .disposed(by: self.bag)
         
         movieListView.rx.modelSelected(Movie.self)
             .subscribe(onNext: { movie in
@@ -66,7 +57,7 @@ class SearchMoviesViewController: UIViewController, UICollectionViewDelegateFlow
             let offsetY = scrollView.contentOffset.y
 
         if offsetY > (self.movieListView.contentSize.height - 200 - scrollView.frame.size.height){
-            self.endPointState.appendMovies(with: self.searchQuery!)
+            self.endPointState.appendMovies(with: self.endPoint)
         }
     }
     
@@ -80,6 +71,7 @@ class SearchMoviesViewController: UIViewController, UICollectionViewDelegateFlow
         movieListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         movieListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        self.movieListView.setContentOffset(CGPoint(x:0,y:0), animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -14,7 +14,6 @@ protocol SavedMovieListViewModelProtocol {
     func deleteLikedMovie(movie: Movie)
 }
 
-
 final class SavedMovieListViewModel : SavedMovieListViewModelProtocol {
     
     private let LikedMoviesUseCase : LikedMovieUseCase
@@ -24,7 +23,9 @@ final class SavedMovieListViewModel : SavedMovieListViewModelProtocol {
     }
     
     var movieData : Observable<[Movie]> {
-        return self.LikedMoviesUseCase.MoviesObservable
+        get {
+            self.LikedMoviesUseCase.MoviesObservable
+        }
     }
     
     func addLikedMovie(movie: Movie) {

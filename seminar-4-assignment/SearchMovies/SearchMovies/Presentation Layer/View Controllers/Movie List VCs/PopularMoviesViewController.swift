@@ -24,7 +24,6 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
         fatalError("init(coder:) has not been implemented")
     }
     
-   
     var movieListView: UICollectionView!
     private var layout = UICollectionViewFlowLayout()
 

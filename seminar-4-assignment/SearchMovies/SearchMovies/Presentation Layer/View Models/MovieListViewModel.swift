@@ -48,7 +48,9 @@ final class MovieListViewModel : MovieListViewModelProtocol {
     }*/
     
     var movieData : Observable<[Movie]> {
-        return self.MoviesUseCase.MoviesObservable
+        get {
+            self.MoviesUseCase.MoviesObservable
+        }
     }
     
     func fetchMovies(with endPoint: MovieListEndPoint) {

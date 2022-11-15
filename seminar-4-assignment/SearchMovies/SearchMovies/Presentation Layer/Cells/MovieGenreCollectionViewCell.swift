@@ -22,10 +22,8 @@ class MovieGenreCollectionViewCell: UICollectionViewCell {
                 if isSelected {
                     //add halo affect
                     nameLabel.textColor = .white
-                    NotificationCenter.default.post(name: NSNotification.Name("didTapChangeGenreFilter"), object: nil, userInfo: ["filtername": self.nameLabel.text])
                 }
                 else {
-                    
                     self.nameLabel.textColor = Styles.darkGrey
                 }
             }

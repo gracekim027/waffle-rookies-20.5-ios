@@ -31,7 +31,6 @@ class CustomSegmentedControl: UIView {
     public private(set) var selectedIndex : Int = 0
     
     convenience init() {
-        //init: buttonTitle:[String]
         self.init(frame: .zero)
         for buttonTitle in buttonTitles {
             let button = UIButton(type: .system)
@@ -42,6 +41,7 @@ class CustomSegmentedControl: UIView {
             button.titleLabel?.textAlignment = .left
             buttons.append(button)
         }
+        
         buttons[0].setTitleColor(selectorTextColor, for: .normal)
     }
     
@@ -74,9 +74,6 @@ class CustomSegmentedControl: UIView {
             btn.setTitleColor(textColor, for: .normal)
             if btn == sender {
                 let selectorPosition = frame.width/CGFloat(buttonTitles.count) * CGFloat(buttonIndex)
-                /*DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    self.selectedIndex = buttonIndex
-                }*/
                 self.selectedIndex = buttonIndex
                 delegate?.change(to: selectedIndex)
                 UIView.animate(withDuration: 0.2) {
@@ -91,7 +88,6 @@ class CustomSegmentedControl: UIView {
 //Configuration View
 extension CustomSegmentedControl {
     private func updateView() {
-        //createButton()
         configSelectorView()
         configStackView()
     }

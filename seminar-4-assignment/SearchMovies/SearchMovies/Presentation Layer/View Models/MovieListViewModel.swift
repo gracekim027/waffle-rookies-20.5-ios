@@ -8,21 +8,13 @@
 //question: if there has to be a view model for each use case 이거 왜 하는거임?
 
 import Foundation
-import RxCocoa
 import RxSwift
 
-protocol MovieListViewModelInput {
+protocol MovieListViewModelProtocol {
     func fetchMovies(with endPoint : MovieListEndPoint)
    
 }
 
-protocol MovieListViewModelOutput {
-    
-}
-
-protocol MovieListViewModelProtocol : MovieListViewModelInput, MovieListViewModelOutput {
-    
-}
 
 struct MovieListViewModelActions {
     let showMovieDetails: (Movie) -> Void
@@ -36,11 +28,13 @@ struct MovieListData {
 }
 
 
-
 final class MovieListViewModel : MovieListViewModelProtocol {
     
-    private let popularMoviesUseCase : PopularMoviesUseCase
+    private let MoviesUseCase : MovieListUseCase
     
+    init (MoviesUseCase : MovieListUseCase){
+        self.MoviesUseCase = MoviesUseCase
+    }
     
     //어차피 눌렀을 때 상세뷰 나와야해서 이러면 서칭해야함.
    /* var moviesListData : Observable<[MovieListData]> {
@@ -54,24 +48,16 @@ final class MovieListViewModel : MovieListViewModelProtocol {
     }*/
     
     var movieData : Observable<[Movie]> {
-        return self.popularMoviesUseCase.MoviesObservable
-    }
-    
-    init (popularMoviesUseCase : PopularMoviesUseCase){
-        self.popularMoviesUseCase = popularMoviesUseCase
+        return self.MoviesUseCase.MoviesObservable
     }
     
     func fetchMovies(with endPoint: MovieListEndPoint) {
-        self.popularMoviesUseCase.loadMovies(with: endPoint)
+        self.MoviesUseCase.loadMovies(with: endPoint)
         
     }
     
     func appendMovies(with endPoint: MovieListEndPoint){
-        self.popularMoviesUseCase.appendMovies(with: endPoint)
-    }
-    
-    func didSelect(at indexPath: IndexPath) {
-        //actions?.showMovieDetails(movies[indexPath.row])
+        self.MoviesUseCase.appendMovies(with: endPoint)
     }
     
 }

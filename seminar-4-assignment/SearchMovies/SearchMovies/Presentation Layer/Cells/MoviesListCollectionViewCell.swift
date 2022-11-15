@@ -12,13 +12,13 @@ import RxDataSources
 import SkeletonView
 
 class MoviesListCollectionViewCell: UICollectionViewCell {
-   var cellDisposeBag = DisposeBag()
+    
+    private var cellDisposeBag = DisposeBag()
     
     var my_movie : Movie?
     var posterView = UIImageView()
     var ratingLabel = UILabel()
     var titleLabel = UILabel()
-    //question: difference of using var and let in cell?
     
     override var reuseIdentifier: String {
         return "MoviesListCollectionViewCell"

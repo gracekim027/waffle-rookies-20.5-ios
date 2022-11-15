@@ -21,7 +21,7 @@ protocol SearchMoviesUseCaseProtocol {
 
 
 //기존 list state 이 use case 가 되는 것.
-final class PopularMoviesUseCase : SearchMoviesUseCaseProtocol {
+final class MovieListUseCase : SearchMoviesUseCaseProtocol {
     
     private let dataRepository : SearchMoviesRepository
     private let disposeBag = DisposeBag()
@@ -78,12 +78,5 @@ final class PopularMoviesUseCase : SearchMoviesUseCaseProtocol {
         }
     }
     }
-    
-    
-    func initParams(){
-        self.page = 1
-        self.movies = []
-    }
-    
     
 }

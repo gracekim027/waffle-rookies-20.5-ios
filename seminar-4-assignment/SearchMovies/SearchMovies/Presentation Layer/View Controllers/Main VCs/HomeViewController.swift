@@ -31,19 +31,23 @@ class HomeViewController: UIViewController{
     private var recentButton = UIButton()
     private var popularButton = UIButton()
     
+    private let genreList : GenresUseCase
     private let popularVM : MovieListViewModel
-   // private let topRatedVM : MovieListViewModel
+    private let topRatedVM : MovieListViewModel
     private var popularCollectionView : PopularMoviesViewController
-    private var TopRatedCollectionView = TopRatedMoviesViewController()
-    private var searchCollectionView = SearchMoviesViewController()
+    private var TopRatedCollectionView : TopRatedMoviesViewController
    
     
     init(item: CustomTabItem) {
         self.item = item
         let repository = SearchMoviesRepository()
-        let useCase = PopularMoviesUseCase(dataRepository: repository)
-        self.popularVM = MovieListViewModel(popularMoviesUseCase: useCase)
+        let popularUseCase = MovieListUseCase(dataRepository: repository)
+        let topRatedUseCase = MovieListUseCase(dataRepository: repository)
+        self.genreList = GenresUseCase(dataRepository: repository)
+        self.popularVM = MovieListViewModel(MoviesUseCase: popularUseCase)
+        self.topRatedVM = MovieListViewModel(MoviesUseCase: topRatedUseCase)
         self.popularCollectionView = PopularMoviesViewController(movieListViewModel: popularVM)
+        self.TopRatedCollectionView = TopRatedMoviesViewController(movieListViewModel: topRatedVM)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -55,7 +59,7 @@ class HomeViewController: UIViewController{
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        GenreListState.shared.loadGenres()
+        genreList.loadGenres()
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.view.backgroundColor = Styles.backgroundBlue
         
@@ -77,10 +81,8 @@ class HomeViewController: UIViewController{
         self.TopRatedCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
         self.add(popularCollectionView)
         self.popularCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
-        self.add(searchCollectionView)
-        self.searchCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
+        
         TopRatedCollectionView.view.isHidden = true
-        searchCollectionView.view.isHidden = true
         configureHeader()
         configureSearchBar()
         configureSegmentedControl()

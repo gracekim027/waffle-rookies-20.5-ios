@@ -10,82 +10,80 @@ import RxSwift
 import UIKit
 import RxCocoa
 
-final class LikedMovieUseCase {
 
-    var LikedMovies = [Movie]() {
+protocol LikedMovieUseCaseProtocol {
+    
+    //loads movies from user defaults
+    func loadLikedMovies()
+    
+    //saves movie to user defaults
+    func saveLikedMovies()
+    
+    //adds movie to movie array
+    func addLikedMovie(addedMovie : Movie)
+    
+    //deletes movie from movie array
+    func deleteLikedMovie(deletedMovie: Movie)
+}
+
+
+final class LikedMovieUseCase : LikedMovieUseCaseProtocol {
+    
+    
+    private let dataRepository : SaveMoviesRepository
+    private let disposeBag = DisposeBag()
+    
+    init(dataRepository : SaveMoviesRepository){
+        self.dataRepository = dataRepository
+    }
+    
+    private var movies = [Movie]() {
         didSet {
             self.getObserver()
-            self.saveMovieList()
+            self.saveLikedMovies()
         }
     }
     
     func getObserver(){
-        self.moviesObservable.accept(LikedMovies)
+        self.MoviesRelay.accept(movies)
     }
     
-    private let defaults = UserDefaults.standard
+    var MoviesRelay = BehaviorRelay<[Movie]>(value: [])
     
-    var moviesObservable = BehaviorRelay<[Movie]>(value: [])
-    
-    var moviesObserver: Observable<[Movie]> {
-        return moviesObservable.asObservable()
+    var MoviesObservable : Observable<[Movie]> {
+        return self.MoviesRelay.asObservable()
     }
     
-    private init(){ }
-    
-    func saveMovieList(){
-        let movie_save = self.LikedMovies.map {
-            [
-                    "id" : $0.id,
-                    "title": $0.title,
-                    "posterPath": $0.posterPath as Any,
-                    "overview": $0.overview,
-                    "voteAverage" : $0.voteAverage,
-                    "releaseDate" : $0.releaseDate,
-                    "liked" : $0.liked,
-                    "genreIDs": $0.genreIDs
-                
-            ]
-        }
-        
-        let userDefaults = UserDefaults.standard
-        userDefaults.set(movie_save, forKey: "likedMovieList")
-    }
-    
-    func addMovie(newMovie : Movie){
-        if !LikedMovies.contains( where: {$0.id == newMovie.id} ){
-            self.LikedMovies.append(newMovie)
+    func loadLikedMovies() {
+        dataRepository.loadLikedMovies(){[weak self] (result) in
+            guard let self = self else {return}
+            switch result {
+            case .success(let response):
+                self.movies = []
+                self.movies = response
+            case .failure(_):
+                print("cannot load saved movies")
+            }
         }
     }
     
-    func removeMovie(movie_to_delete: Movie){
-        if LikedMovies.contains( where: {$0.id == movie_to_delete.id} ){
-            let index = LikedMovies.firstIndex(where: {$0.id == movie_to_delete.id})!
-            self.LikedMovies.remove(at: index)
+    func saveLikedMovies() {
+        self.dataRepository.saveLikedMovies(moviesToSave: self.movies)
+    }
+    
+    func addLikedMovie(addedMovie: Movie) {
+        if !self.movies.contains( where: {$0.id == addedMovie.id} ){
+            self.movies.append(addedMovie)
+        }
+    }
+    
+    func deleteLikedMovie(deletedMovie: Movie) {
+        if movies.contains( where: {$0.id == deletedMovie.id} ){
+            let index = movies.firstIndex(where: {$0.id == deletedMovie.id})!
+            self.movies.remove(at: index)
         }else{
             print("trying to unlike an unsaved movie")
         }
-    }
-    
-    
-    func loadMovieList(){
-        let userDefaults = UserDefaults.standard
-        guard let movie_save = userDefaults.object(forKey: "likedMovieList") as? [[String: Any]] else {return}
-        
-        let savedMovies : [Movie] = movie_save.compactMap{
-            guard let id = $0["id"] as? Int else { return nil}
-            guard let title = $0["title"] as? String else {return nil}
-            guard let posterPath = $0["posterPath"] as? String? else {return nil}
-            guard let overview = $0["overview"] as? String else {return nil}
-            guard let voteAverage = $0["voteAverage"] as? Double else {return nil}
-            guard let releaseDate = $0["releaseDate"] as? String else {return nil}
-            guard let liked = $0["liked"] as? Bool else {return nil}
-            guard let genreIDs = $0["genreIDs"] as? [Int] else {return nil}
-            
-            return Movie(id: id, title: title, posterPath: posterPath, overview: overview, voteAverage: voteAverage, releaseDate: releaseDate, liked: liked, genreIDs: genreIDs)
-        }
-        self.moviesObservable.accept(savedMovies)
-        LikedMovies = savedMovies
     }
 }
 

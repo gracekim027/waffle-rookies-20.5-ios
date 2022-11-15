@@ -12,37 +12,44 @@ import RxSwift
 class TopRatedMoviesViewController: UIViewController, UICollectionViewDelegateFlowLayout {
 
     private let bag = DisposeBag()
-    
+    private let movieListViewModel : MovieListViewModel
     private var endPoint = MovieListEndPoint.topRated
     
-    private let endPointState = TopRatedMoviesListState.shared
+    init(movieListViewModel : MovieListViewModel){
+        self.movieListViewModel = movieListViewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+   
     var movieListView: UICollectionView!
     private var layout = UICollectionViewFlowLayout()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        endPointState.loadMovies(with: endPoint)
+        self.movieListViewModel.fetchMovies(with: endPoint)
         movieListView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.view.addSubview(movieListView)
         configureMovieList()
         self.bind()
     }
     
-    func bind(){
+    private func bind(){
         
         movieListView.rx.setDelegate(self)
             .disposed(by: bag)
 
         movieListView.register(MoviesListCollectionViewCell.self, forCellWithReuseIdentifier: "MoviesListCollectionViewCell")
         
-            
-        self.endPointState.moviesObservables
+        self.movieListViewModel.movieData
             .observe(on: MainScheduler.instance)
             .bind(to: self.movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in
-                cell.configureMovie(movie)
-                
-            }
-            .disposed(by: self.bag)
+                    cell.configureMovie(movie)
+                }
+                .disposed(by: self.bag)
         
         movieListView.rx.modelSelected(Movie.self)
             .subscribe(onNext: { movie in
@@ -51,17 +58,21 @@ class TopRatedMoviesViewController: UIViewController, UICollectionViewDelegateFl
             })
             .disposed(by: bag)
     }
-
+    
     //pagination
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            let offsetY = scrollView.contentOffset.y
-
+        let offsetY = scrollView.contentOffset.y
         if offsetY > (self.movieListView.contentSize.height - 200 - scrollView.frame.size.height){
-            self.endPointState.appendMovies(with: self.endPoint)
+            self.movieListViewModel.appendMovies(with: self.endPoint)
         }
     }
+}
+
+
+///functions related to applying design
+extension TopRatedMoviesViewController {
     
-    func configureMovieList(){
+    private func configureMovieList(){
         layout.scrollDirection = .vertical
         movieListView.setCollectionViewLayout(layout, animated: true)
         movieListView.showsVerticalScrollIndicator = false
@@ -71,10 +82,12 @@ class TopRatedMoviesViewController: UIViewController, UICollectionViewDelegateFl
         movieListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         movieListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        self.movieListView.setContentOffset(CGPoint(x:0,y:0), animated: true)
+        movieListView.setContentOffset(CGPoint(x:0,y:0), animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: (collectionView.frame.width-24)/2, height: 250)
     }
+    
+   
 }

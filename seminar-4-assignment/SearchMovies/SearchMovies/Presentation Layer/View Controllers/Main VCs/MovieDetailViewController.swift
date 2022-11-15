@@ -36,6 +36,8 @@ class MovieDetailViewController: UIViewController {
     
     private var summaryTitle = UILabel()
     private var summaryLabel = UILabel()
+    
+    private let genreList : GenresUseCase
    
     init(movie : Movie){
         self.my_movie = movie
@@ -44,15 +46,19 @@ class MovieDetailViewController: UIViewController {
         self.realRating.text = "\(my_movie.voteAverage) / 10"
         self.rating.text = "Rating"
         self.titleLabel.text = movie.title
+        
+        let repo = SearchMoviesRepository()
+        self.genreList = GenresUseCase(dataRepository: repo)
         let genreCode = movie.genreIDs[0]
-        let genreName = GenreListState.shared.findGenreTitle(with: genreCode)
+        genreList.loadGenres()
+        let genreName = genreList.findGenreTitle(with: genreCode)
         self.genreLabel.text = "Genre"
         self.realGenre.text = "\(genreName)"
         let yearText = movie.releaseDate.components(separatedBy: "-")
         self.realYear.text = yearText[0]
         self.summaryLabel.text = movie.overview
         
-        if (LikedMovieState.shared.LikedMovies.contains( where: {$0.id == movie.id} )){
+        if (movie.liked){
             likeButton.isSelected = true
         }else{
             likeButton.isSelected = false
@@ -76,7 +82,6 @@ class MovieDetailViewController: UIViewController {
         self.view.backgroundColor = Styles.backgroundBlue
         addSubviews()
         configureSubviews()
-        
     }
     
     private func addSubviews(){

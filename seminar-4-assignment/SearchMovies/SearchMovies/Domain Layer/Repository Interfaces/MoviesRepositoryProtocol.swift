@@ -16,5 +16,6 @@ protocol SearchMoviesDataRepositoryProtocol {
 
 ///for loading movies from user defaults
 protocol SaveMoviesDataRepositoryProtocol {
-    
+    func saveLikedMovies(moviesToSave: [Movie])
+    func loadLikedMovies(completion: @escaping (Result<[Movie], Error>) -> ())
 }

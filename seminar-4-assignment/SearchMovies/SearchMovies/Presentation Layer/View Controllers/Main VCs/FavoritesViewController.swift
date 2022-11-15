@@ -13,7 +13,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     
     private let bag = DisposeBag()
     
-    private var likedMovieState = LikedMovieState.shared
+    private let likedVM : SavedMovieListViewModel
 
     private var titleLabel = UILabel()
     private var categoryStackLabel = UILabel()
@@ -28,24 +28,46 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     
     init(item: CustomTabItem) {
         self.item = item
+        let repository = SaveMoviesRepository()
+        let likedMoviesUseCase = LikedMovieUseCase(dataRepository: repository)
+        self.likedVM = SavedMovieListViewModel(MoviesUseCase: likedMoviesUseCase)
         super.init(nibName: nil, bundle: nil)
-        }
+    }
     
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-        
     }
     
     
     override func viewDidLoad() {
-        self.view.backgroundColor = Styles.backgroundBlue
-        likedMovieState.loadMovieList()
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(forName: Notification.Name("didTapLike"), object: nil, queue: nil, using: didTapLike)
+        NotificationCenter.default.addObserver(forName: Notification.Name("didTapNotLike"), object: nil, queue: nil, using: didTapNotLike)
+        self.view.backgroundColor = Styles.backgroundBlue
+        self.likedVM.loadMovies()
         self.bind()
         addSubviews()
         configureSubviews()
     }
+    
+    @objc func didTapLike(_ notification: Notification) -> Void{
+        guard let movieToAdd = notification.userInfo!["movie"] as? Movie else {
+            return
+        }
+        
+        self.likedVM.addLikedMovie(movie: movieToAdd)
+    }
+    
+    @objc func didTapNotLike(_ notification: Notification) -> Void{
+        guard let movieToDelete = notification.userInfo!["movie"] as? Movie else {
+            return
+            
+        }
+        
+        self.likedVM.deleteLikedMovie(movie: movieToDelete)
+    }
+    
     
     private func addSubviews(){
         self.view.addSubview(headerLabel)
@@ -82,17 +104,12 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         }
         .disposed(by: bag)
         
-        genreListView.rx.itemSelected
-            .subscribe(onNext: { index in
-                //change filter
-            })
-        
         
         //-----binding for liked movie collection view----
         movieListView.rx.setDelegate(self)
             .disposed(by: bag)
         
-        self.likedMovieState.moviesObserver
+        self.likedVM.movieData
             .observe(on: MainScheduler.instance)
             .bind(to: movieListView.rx.items(cellIdentifier: "MoviesListCollectionViewCell", cellType: MoviesListCollectionViewCell.self )) { index, movie, cell in
                 cell.configureMovie(movie)

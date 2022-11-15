@@ -2,8 +2,7 @@
 //  CustomTabBarViewController.swift
 //  CustomTabBarExample
 //
-//  Created by Jędrzej Chołuj on 18/12/2021.
-//
+
 
 import UIKit
 import RxSwift
@@ -58,7 +57,6 @@ class CustomTabBarController: UITabBarController {
     }
     
     //MARK: - Bindings
-    
     private func bind() {
         customTabBar.itemTapped
             .bind { [weak self] in self?.selectTabWith(index: $0) }

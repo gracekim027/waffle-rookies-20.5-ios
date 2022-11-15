@@ -19,38 +19,34 @@ protocol SearchMoviesUseCaseProtocol {
     func appendMovies(with endPoint: MovieListEndPoint)
 }
 
+
 //기존 list state 이 use case 가 되는 것.
 final class PopularMoviesUseCase : SearchMoviesUseCaseProtocol {
     
     private let dataRepository : SearchMoviesRepository
     private let disposeBag = DisposeBag()
-    
-    var MoviesObservable = BehaviorRelay<[Movie]>(value: [])
-    
     private var error : Error?
     private var page : Int = 1
     
-    var movies = [Movie]() {
+    
+    init(dataRepository : SearchMoviesRepository){
+        self.dataRepository = dataRepository
+    }
+    
+    private var movies = [Movie]() {
         didSet {
             self.getObserver()
         }
     }
     
     func getObserver(){
-        self.MoviesObservable.accept(movies)
+        self.MoviesRelay.accept(movies)
     }
     
-    var moviesObserver: Observable<[Movie]> {
-        return Observable.of(movies)
-    }
+    var MoviesRelay = BehaviorRelay<[Movie]>(value: [])
     
-    var moviesObservables: Observable<[Movie]>{
-        return MoviesObservable.asObservable()
-    }
-    
-    
-    init(dataRepository : SearchMoviesRepository){
-        self.dataRepository = dataRepository
+    var MoviesObservable : Observable<[Movie]> {
+        return self.MoviesRelay.asObservable()
     }
     
     ///loads movies with endpoint
@@ -83,8 +79,11 @@ final class PopularMoviesUseCase : SearchMoviesUseCaseProtocol {
     }
     }
     
+    
     func initParams(){
         self.page = 1
         self.movies = []
     }
+    
+    
 }

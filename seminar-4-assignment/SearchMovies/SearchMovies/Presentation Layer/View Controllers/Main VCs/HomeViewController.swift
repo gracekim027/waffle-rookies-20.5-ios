@@ -31,14 +31,20 @@ class HomeViewController: UIViewController{
     private var recentButton = UIButton()
     private var popularButton = UIButton()
     
-    private var popularCollectionView = PopularMoviesViewController()
+    private let popularVM : MovieListViewModel
+   // private let topRatedVM : MovieListViewModel
+    private var popularCollectionView : PopularMoviesViewController
     private var TopRatedCollectionView = TopRatedMoviesViewController()
     private var searchCollectionView = SearchMoviesViewController()
    
+    
     init(item: CustomTabItem) {
-            self.item = item
-            super.init(nibName: nil, bundle: nil)
-        
+        self.item = item
+        let repository = SearchMoviesRepository()
+        let useCase = PopularMoviesUseCase(dataRepository: repository)
+        self.popularVM = MovieListViewModel(popularMoviesUseCase: useCase)
+        self.popularCollectionView = PopularMoviesViewController(movieListViewModel: popularVM)
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {

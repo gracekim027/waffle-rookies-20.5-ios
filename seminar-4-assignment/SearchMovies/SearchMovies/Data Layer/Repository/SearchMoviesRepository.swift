@@ -22,12 +22,12 @@ class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
     private let apiKey = "f330b07acf479c98b184db47a4d2608b"
     private let baseAPIURL = "https://api.themoviedb.org/3"
     private let urlSession = URLSession.shared
-    var page : Int = 1
-    var movies : [Movie] = []
     
-    private init() {}
+    private var page : Int = 1
     
-    //for when popular & top_rated
+    init() {}
+    
+    ///initial call for fetching movies
     func fetchMovies(from endpoint: MovieListEndPoint, pageNum: Int, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
         self.page = pageNum
         
@@ -58,6 +58,7 @@ class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
         self.semaphore.wait()
     }
     
+    ///called for getting one movie
     func fetchMovie(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ()){
         
         guard let url = URL(string: "\(baseAPIURL)/movie/\(id)?/api_key=\(apiKey)&language=en-US") else {
@@ -87,7 +88,7 @@ class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
     }
     
       
-    //for when search bar tapped
+    ///called when searchBar is tapped
     func searchMovie(query: String, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
         guard let url = URL(string: "\(baseAPIURL)/search/movie?api_key=\(apiKey)&language=en-US&query=\(query)&page=\(page)&include_adult = false") else {
             completion(.failure(.invalidEndPoint))
@@ -112,6 +113,7 @@ class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
         task.resume()
     }
     
+    ///called once at start of launch
     func getGenreList(completion: @escaping (Result<GenreDict, MovieError>) -> ()){
         guard let url = URL(string:
                                 "https://api.themoviedb.org/3/genre/movie/list?api_key=\(apiKey)&language=en-US") else {
@@ -129,7 +131,6 @@ class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
             return
         }
         do {
-            //print("point 4")
             let result : GenreDict = try JSONDecoder().decode(GenreDict.self, from: data)
             completion(.success(result))
             self.semaphore.signal()

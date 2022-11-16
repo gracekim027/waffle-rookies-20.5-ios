@@ -18,8 +18,7 @@ extension CustomTabItem {
         let popularUsecase = MovieListUseCase(dataRepository: searchrepository)
         let topRatedUsecase = MovieListUseCase(dataRepository: searchrepository)
         let genreUsecase = GenresUseCase(dataRepository: searchrepository)
-        let popularVM = MovieListViewModel(MoviesUseCase: popularUsecase)
-        let topRatedVM = MovieListViewModel(MoviesUseCase: topRatedUsecase)
+        
         
         let savedrepository = SaveMoviesRepository()
         let likedUsecase = LikedMovieUseCase(dataRepository: savedrepository)

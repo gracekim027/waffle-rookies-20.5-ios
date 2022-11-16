@@ -31,8 +31,8 @@ class HomeViewController: UIViewController{
     private var popularButton = UIButton()
     
     private let genreList : GenresUseCase
-    private let popularVM : MovieListViewModel
-    private let topRatedVM : MovieListViewModel
+    private let popularUsecase : MovieListUseCase
+    private let topRatedUsecase : MovieListUseCase
     private var popularCollectionView : PopularMoviesViewController
     private var TopRatedCollectionView : TopRatedMoviesViewController
    
@@ -46,11 +46,14 @@ class HomeViewController: UIViewController{
         self.item = item
         
         self.genreList = genreList
-        self.popularVM = popularVM
-        self.topRatedVM = topRatedVM
+        self.popularUsecase = popularUsecase
+        self.topRatedUsecase = topRatedUsecase
         
         //loading from user defaults --> only at initial launch
         likedVM.loadData()
+        
+        let popularVM = MovieListViewModel(MoviesUseCase: popularUsecase)
+        let topRatedVM = MovieListViewModel(MoviesUseCase: topRatedUsecase)
         
         self.popularCollectionView = PopularMoviesViewController(movieListViewModel: popularVM,
                                                                  likedVM: likedVM,

@@ -29,18 +29,21 @@ protocol LikedMovieUseCaseProtocol {
 
 final class LikedMovieUseCase : LikedMovieUseCaseProtocol {
     
-    
     private let dataRepository : SaveMoviesRepository
     private let disposeBag = DisposeBag()
     
     init(dataRepository : SaveMoviesRepository){
         self.dataRepository = dataRepository
+        self.loadLikedMovies()
+        NotificationCenter.default.addObserver(forName: Notification.Name("didTapLike"), object: nil, queue: nil, using: didTapLike)
+        NotificationCenter.default.addObserver(forName: Notification.Name("didTapNotLike"), object: nil, queue: nil, using: didTapNotLike)
     }
+    
     
     private var movies = [Movie]() {
         didSet {
             self.getObserver()
-            self.saveLikedMovies()
+            saveLikedMovies()
         }
     }
     
@@ -55,7 +58,7 @@ final class LikedMovieUseCase : LikedMovieUseCaseProtocol {
     }
     
     func loadLikedMovies() {
-        dataRepository.loadLikedMovies(){[weak self] (result) in
+        dataRepository.loadSavedData(){[weak self] (result) in
             guard let self = self else {return}
             switch result {
             case .success(let response):
@@ -68,7 +71,7 @@ final class LikedMovieUseCase : LikedMovieUseCaseProtocol {
     }
     
     func saveLikedMovies() {
-        self.dataRepository.saveLikedMovies(moviesToSave: self.movies)
+        self.dataRepository.saveData(moviesToSave: self.movies)
     }
     
     func addLikedMovie(addedMovie: Movie) {
@@ -81,8 +84,29 @@ final class LikedMovieUseCase : LikedMovieUseCaseProtocol {
         if movies.contains( where: {$0.id == deletedMovie.id} ){
             let index = movies.firstIndex(where: {$0.id == deletedMovie.id})!
             self.movies.remove(at: index)
-        }else{
-            print("trying to unlike an unsaved movie")
+        }
+    }
+    
+    @objc func didTapLike(_ notification: Notification) -> Void{
+        guard let movieToAdd = notification.userInfo!["movie"] as? Movie else {
+            return
+        }
+        addLikedMovie(addedMovie: movieToAdd)
+    }
+    
+    @objc func didTapNotLike(_ notification: Notification) -> Void{
+        guard let movieToDelete = notification.userInfo!["movie"] as? Movie else {
+            return
+        }
+        deleteLikedMovie(deletedMovie: movieToDelete)
+    }
+    
+    
+    func searchLikedMovie(searchMovie: Movie) -> Bool {
+        if movies.contains( where: {$0.id == searchMovie.id} ){
+            return true
+        }else {
+            return false
         }
     }
 }

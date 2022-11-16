@@ -14,6 +14,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     private let bag = DisposeBag()
     
     private let likedVM : SavedMovieListViewModel
+    private let genreList : GenresUseCase
 
     private var titleLabel = UILabel()
     private var categoryStackLabel = UILabel()
@@ -26,11 +27,12 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     private var layout2 = UICollectionViewFlowLayout()
     private var item : CustomTabItem
     
-    init(item: CustomTabItem) {
+    init(item: CustomTabItem,
+         likedVM: SavedMovieListViewModel,
+         genreList: GenresUseCase) {
         self.item = item
-        let repository = SaveMoviesRepository()
-        let likedMoviesUseCase = LikedMovieUseCase(dataRepository: repository)
-        self.likedVM = SavedMovieListViewModel(MoviesUseCase: likedMoviesUseCase)
+        self.likedVM = likedVM
+        self.genreList = genreList
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -42,30 +44,10 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(forName: Notification.Name("didTapLike"), object: nil, queue: nil, using: didTapLike)
-        NotificationCenter.default.addObserver(forName: Notification.Name("didTapNotLike"), object: nil, queue: nil, using: didTapNotLike)
         self.view.backgroundColor = Styles.backgroundBlue
-        self.likedVM.loadMovies()
         self.bind()
         addSubviews()
         configureSubviews()
-    }
-    
-    @objc func didTapLike(_ notification: Notification) -> Void{
-        guard let movieToAdd = notification.userInfo!["movie"] as? Movie else {
-            return
-        }
-        
-        self.likedVM.addLikedMovie(movie: movieToAdd)
-    }
-    
-    @objc func didTapNotLike(_ notification: Notification) -> Void{
-        guard let movieToDelete = notification.userInfo!["movie"] as? Movie else {
-            return
-            
-        }
-        
-        self.likedVM.deleteLikedMovie(movie: movieToDelete)
     }
     
     
@@ -118,7 +100,9 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         
         self.movieListView.rx.modelSelected(Movie.self)
             .subscribe(onNext: { movie in
-            let VC = MovieDetailViewController(movie: movie)
+            let VC = MovieDetailViewController(movie: movie,
+                                               likedVM: self.likedVM,
+                                               genreList: self.genreList)
             self.navigationController?.pushViewController(VC, animated: true)
             })
             .disposed(by: bag)
@@ -182,15 +166,15 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegateFlowLay
         movieListView.backgroundColor = .clear
         movieListView.translatesAutoresizingMaskIntoConstraints = false
         movieListView.topAnchor.constraint(equalTo: self.genreListView.bottomAnchor, constant: 20).isActive = true
-        movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 24).isActive = true
-        movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
+        movieListView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 12).isActive = true
+        movieListView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -12).isActive = true
         movieListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == self.movieListView{
-        return CGSize(width: (collectionView.frame.width-24)/2, height: 250)
+        return CGSize(width: (collectionView.frame.width-24)/2, height: 280)
         }else {
             return CGSize(width: 68.0, height: 72.0)
         }

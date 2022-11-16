@@ -177,14 +177,14 @@
 			path = Extra;
 			sourceTree = "<group>";
 		};
-		65BCD1AD290ADB4F00C80A15 /* DTO */ = {
+		65BCD1AD290ADB4F00C80A15 /* Data Objects */ = {
 			isa = PBXGroup;
 			children = (
 				65BCD1B3290ADB4F00C80A15 /* MovieListEndPoint.swift */,
 				65BCD1AF290ADB4F00C80A15 /* Movie.swift */,
 				65BCD1B0290ADB4F00C80A15 /* Genre.swift */,
 			);
-			path = DTO;
+			path = "Data Objects";
 			sourceTree = "<group>";
 		};
 		65BCD1B1290ADB4F00C80A15 /* Repository */ = {
@@ -227,7 +227,7 @@
 		65D2989A292217FD00B949A6 /* Data Layer */ = {
 			isa = PBXGroup;
 			children = (
-				65BCD1AD290ADB4F00C80A15 /* DTO */,
+				65BCD1AD290ADB4F00C80A15 /* Data Objects */,
 				65BCD1B1290ADB4F00C80A15 /* Repository */,
 			);
 			path = "Data Layer";

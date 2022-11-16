@@ -16,8 +16,7 @@ import UIKit
 #endif
 
 ///wraps up database, networking, and data source handling logic
-class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
-    //TODO: data repository should request from API service class
+class SearchMoviesRepository : GetDataRepositoryProtocol {
     
     private var semaphore = DispatchSemaphore (value: 0)
     private let apiKey = "f330b07acf479c98b184db47a4d2608b"
@@ -29,7 +28,7 @@ class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
     init() {}
     
     ///initial call for fetching movies
-    func fetchMovies(from endpoint: MovieListEndPoint, pageNum: Int, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
+    func fetchItems(from endpoint: MovieListEndPoint, pageNum: Int, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
         self.page = pageNum
         
         let URLString = "\(baseAPIURL)/movie/\(endpoint.rawValue)?api_key=\(apiKey)&language=en-US&page=\(page)"
@@ -59,8 +58,8 @@ class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
         self.semaphore.wait()
     }
     
-    ///called for getting one movie
-    func fetchMovie(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ()){
+    ///called for getting one movie with id
+    func fetchItem(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ()){
         
         guard let url = URL(string: "\(baseAPIURL)/movie/\(id)?/api_key=\(apiKey)&language=en-US") else {
             completion(.failure(.invalidEndPoint))
@@ -90,7 +89,7 @@ class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
     
       
     ///called when searchBar is tapped
-    func searchMovie(query: String, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
+    func searchItem(query: String, completion: @escaping (Result<MovieResponse, MovieError>) -> ()){
         guard let url = URL(string: "\(baseAPIURL)/search/movie?api_key=\(apiKey)&language=en-US&query=\(query)&page=\(page)&include_adult = false") else {
             completion(.failure(.invalidEndPoint))
             print("url error!")
@@ -114,7 +113,7 @@ class SearchMoviesRepository : SearchMoviesDataRepositoryProtocol {
         task.resume()
     }
     
-    ///called once at start of launch
+    ///called once at start of launch (should be only called once)
     func getGenreList(completion: @escaping (Result<GenreDict, MovieError>) -> ()){
         guard let url = URL(string:
                                 "https://api.themoviedb.org/3/genre/movie/list?api_key=\(apiKey)&language=en-US") else {

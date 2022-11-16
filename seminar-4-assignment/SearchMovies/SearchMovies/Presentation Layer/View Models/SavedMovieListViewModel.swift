@@ -8,13 +8,13 @@
 import Foundation
 import RxSwift
 
-protocol SavedMovieListViewModelProtocol {
-    func loadMovies()
-    func addLikedMovie(movie: Movie)
+protocol SavedDataListViewModelProtocol {
+    func loadData()
+    func addToData(movie: Movie)
     func deleteLikedMovie(movie: Movie)
 }
 
-final class SavedMovieListViewModel : SavedMovieListViewModelProtocol {
+final class SavedMovieListViewModel : SavedDataListViewModelProtocol {
     
     private let LikedMoviesUseCase : LikedMovieUseCase
     
@@ -28,7 +28,7 @@ final class SavedMovieListViewModel : SavedMovieListViewModelProtocol {
         }
     }
     
-    func addLikedMovie(movie: Movie) {
+    func addToData(movie: Movie) {
         self.LikedMoviesUseCase.addLikedMovie(addedMovie: movie)
     }
     
@@ -36,8 +36,12 @@ final class SavedMovieListViewModel : SavedMovieListViewModelProtocol {
         self.LikedMoviesUseCase.deleteLikedMovie(deletedMovie: movie)
     }
     
-    func loadMovies() {
+    func loadData() {
         self.LikedMoviesUseCase.loadLikedMovies()
+    }
+    
+    func searchData(movie: Movie) -> Bool{
+        return self.LikedMoviesUseCase.searchLikedMovie(searchMovie: movie)
     }
     
 }

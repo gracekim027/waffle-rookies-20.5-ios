@@ -11,7 +11,6 @@ class MovieGenreCollectionViewCell: UICollectionViewCell {
     
     var emojiLabel = UILabel()
     var nameLabel = UILabel()
-   
     
     override var reuseIdentifier: String {
         return "MovieGenreCollectionViewCell"
@@ -20,7 +19,6 @@ class MovieGenreCollectionViewCell: UICollectionViewCell {
     override var isSelected: Bool {
             didSet{
                 if isSelected {
-                    //add halo affect
                     nameLabel.textColor = .white
                 }
                 else {
@@ -71,7 +69,7 @@ class MovieGenreCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func didTapChangeGenre(_ button : UIButton){
-        
+      //not implemented
     }
     
     

@@ -26,10 +26,10 @@ extension UIView {
     }
     
     func animateClick(completion: @escaping () -> Void) {
-        UIView.animate(withDuration: 0.15) {
+        UIView.animate(withDuration: 0.1) {
             self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
         } completion: { _ in
-            UIView.animate(withDuration: 0.15) {
+            UIView.animate(withDuration: 0.1) {
                 self.transform = CGAffineTransform.identity
             } completion: { _ in completion() }
         }

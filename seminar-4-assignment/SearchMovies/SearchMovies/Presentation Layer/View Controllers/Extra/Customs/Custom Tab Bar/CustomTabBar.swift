@@ -12,17 +12,23 @@ final class CustomTabBar: UIStackView {
     
     var itemTapped: Observable<Int> { itemTappedSubject.asObservable() }
     
+    
     private lazy var customItemViews: [CustomItemView] = [homeItem, favoriteItem]
     
-    private let homeItem = CustomItemView(with: .home, index: 0)
-    private let favoriteItem = CustomItemView(with: .favorite, index: 1)
+    private var homeItem : CustomItemView
+    private var favoriteItem : CustomItemView
     
     private let itemTappedSubject = PublishSubject<Int>()
     private let disposeBag = DisposeBag()
     
     init() {
-        super.init(frame: .zero)
         
+        
+        self.homeItem = CustomItemView(with: .home, index: 0)
+        self.favoriteItem = CustomItemView(with: .favorite, index: 1)
+        
+        super.init(frame: .zero)
+    
         setupHierarchy()
         setupProperties()
         bind()
@@ -30,6 +36,7 @@ final class CustomTabBar: UIStackView {
         setNeedsLayout()
         layoutIfNeeded()
         selectItem(index: 0)
+        
     }
     
     required init(coder: NSCoder) {

@@ -20,7 +20,6 @@ protocol SearchMoviesUseCaseProtocol {
 }
 
 
-//기존 list state 이 use case 가 되는 것.
 final class MovieListUseCase : SearchMoviesUseCaseProtocol {
     
     private let dataRepository : SearchMoviesRepository
@@ -51,7 +50,7 @@ final class MovieListUseCase : SearchMoviesUseCaseProtocol {
     
     ///loads movies with endpoint
     func loadMovies(with endpoint: MovieListEndPoint) {
-        dataRepository.fetchMovies(from: endpoint, pageNum: self.page) { [weak self] (result) in
+        dataRepository.fetchItems(from: endpoint, pageNum: self.page) { [weak self] (result) in
         guard let self = self else { return }
         switch result {
         case .success(let response):
@@ -67,7 +66,7 @@ final class MovieListUseCase : SearchMoviesUseCaseProtocol {
     ///loads movies for pagination
     func appendMovies(with endPoint: MovieListEndPoint){
         self.page = self.page + 1
-        dataRepository.fetchMovies(from: endPoint, pageNum: self.page) { [weak self] (result) in
+        dataRepository.fetchItems(from: endPoint, pageNum: self.page) { [weak self] (result) in
         guard let self = self else { return }
         switch result {
         case .success(let response):

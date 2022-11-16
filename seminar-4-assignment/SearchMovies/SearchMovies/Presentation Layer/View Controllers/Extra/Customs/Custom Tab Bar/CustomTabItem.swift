@@ -12,13 +12,30 @@ enum CustomTabItem: String, CaseIterable {
  
 extension CustomTabItem {
     
-    
     var viewController: UIViewController {
+        
+        let searchrepository = SearchMoviesRepository()
+        let popularUsecase = MovieListUseCase(dataRepository: searchrepository)
+        let topRatedUsecase = MovieListUseCase(dataRepository: searchrepository)
+        let genreUsecase = GenresUseCase(dataRepository: searchrepository)
+        let popularVM = MovieListViewModel(MoviesUseCase: popularUsecase)
+        let topRatedVM = MovieListViewModel(MoviesUseCase: topRatedUsecase)
+        
+        let savedrepository = SaveMoviesRepository()
+        let likedUsecase = LikedMovieUseCase(dataRepository: savedrepository)
+        let likedVM = SavedMovieListViewModel(MoviesUseCase: likedUsecase)
+        
         switch self {
         case .home:
-            return HomeViewController(item: .home)
+            return HomeViewController(item: .home,
+                                      popularUsecase: popularUsecase,
+                                      topRatedUsecase: topRatedUsecase,
+                                      likedVM: likedVM,
+                                      genreList: genreUsecase)
         case .favorite:
-            return FavoritesViewController(item: .favorite)
+            return FavoritesViewController(item: .favorite,
+                                           likedVM: likedVM,
+                                           genreList: genreUsecase)
         }
     }
     

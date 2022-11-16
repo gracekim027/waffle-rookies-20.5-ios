@@ -17,7 +17,9 @@ final class GenresUseCase {
     
     init (dataRepository : SearchMoviesRepository){
         self.dataRepository = dataRepository
+        self.loadGenres()
     }
+    
     
     func loadGenres() {
         dataRepository.getGenreList() {[weak self] (result) in

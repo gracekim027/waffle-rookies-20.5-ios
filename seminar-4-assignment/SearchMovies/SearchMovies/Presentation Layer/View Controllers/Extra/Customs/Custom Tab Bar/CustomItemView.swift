@@ -25,6 +25,7 @@ final class CustomItemView: UIView {
         self.item = item
         self.index = index
         
+        
         super.init(frame: .zero)
         
         setupHierarchy()

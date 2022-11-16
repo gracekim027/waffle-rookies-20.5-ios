@@ -13,10 +13,16 @@ class TopRatedMoviesViewController: UIViewController, UICollectionViewDelegateFl
 
     private let bag = DisposeBag()
     private let movieListViewModel : MovieListViewModel
+    private let likedVM : SavedMovieListViewModel
+    private let genreList : GenresUseCase
     private var endPoint = MovieListEndPoint.topRated
     
-    init(movieListViewModel : MovieListViewModel){
+    init(movieListViewModel : MovieListViewModel,
+         likedVM: SavedMovieListViewModel,
+         genreList : GenresUseCase){
         self.movieListViewModel = movieListViewModel
+        self.likedVM = likedVM
+        self.genreList = genreList
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -53,7 +59,9 @@ class TopRatedMoviesViewController: UIViewController, UICollectionViewDelegateFl
         
         movieListView.rx.modelSelected(Movie.self)
             .subscribe(onNext: { movie in
-            let VC = MovieDetailViewController(movie: movie)
+                let VC = MovieDetailViewController(movie: movie,
+                                                   likedVM: self.likedVM,
+                                                   genreList: self.genreList)
             self.navigationController?.pushViewController(VC, animated: true)
             })
             .disposed(by: bag)
@@ -86,7 +94,7 @@ extension TopRatedMoviesViewController {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (collectionView.frame.width-24)/2, height: 250)
+        return CGSize(width: (collectionView.frame.width-24)/2, height: 280)
     }
     
    

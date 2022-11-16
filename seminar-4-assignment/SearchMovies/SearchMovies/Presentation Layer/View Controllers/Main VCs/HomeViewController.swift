@@ -5,7 +5,6 @@
 //  Created by grace kim  on 2022/10/08.
 //
 
-
 import UIKit
 import RxSwift
 import RxCocoa
@@ -38,16 +37,28 @@ class HomeViewController: UIViewController{
     private var TopRatedCollectionView : TopRatedMoviesViewController
    
     
-    init(item: CustomTabItem) {
+    init(item: CustomTabItem,
+         popularUsecase: MovieListUseCase,
+         topRatedUsecase: MovieListUseCase,
+         likedVM: SavedMovieListViewModel,
+         genreList : GenresUseCase) {
+        
         self.item = item
-        let repository = SearchMoviesRepository()
-        let popularUseCase = MovieListUseCase(dataRepository: repository)
-        let topRatedUseCase = MovieListUseCase(dataRepository: repository)
-        self.genreList = GenresUseCase(dataRepository: repository)
-        self.popularVM = MovieListViewModel(MoviesUseCase: popularUseCase)
-        self.topRatedVM = MovieListViewModel(MoviesUseCase: topRatedUseCase)
-        self.popularCollectionView = PopularMoviesViewController(movieListViewModel: popularVM)
-        self.TopRatedCollectionView = TopRatedMoviesViewController(movieListViewModel: topRatedVM)
+        
+        self.genreList = genreList
+        self.popularVM = popularVM
+        self.topRatedVM = topRatedVM
+        
+        //loading from user defaults --> only at initial launch
+        likedVM.loadData()
+        
+        self.popularCollectionView = PopularMoviesViewController(movieListViewModel: popularVM,
+                                                                 likedVM: likedVM,
+                                                                 genreList: self.genreList)
+        
+        self.TopRatedCollectionView = TopRatedMoviesViewController(movieListViewModel: topRatedVM,
+                                                                   likedVM: likedVM,
+                                                                   genreList: self.genreList)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -59,10 +70,8 @@ class HomeViewController: UIViewController{
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        genreList.loadGenres()
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.view.backgroundColor = Styles.backgroundBlue
-        
         addSubviews()
         configureSubviews()
     }
@@ -78,9 +87,9 @@ class HomeViewController: UIViewController{
     private func configureSubviews(){
         //default endpoint: popular
         self.add(TopRatedCollectionView)
-        self.TopRatedCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
+        self.TopRatedCollectionView.view.frame = CGRect(x: 12, y: 240, width: self.view.frame.width - 24, height: self.view.frame.height)
         self.add(popularCollectionView)
-        self.popularCollectionView.view.frame = CGRect(x: 24, y: 240, width: self.view.frame.width - 48, height: self.view.frame.height)
+        self.popularCollectionView.view.frame = CGRect(x: 12, y: 240, width: self.view.frame.width - 24, height: self.view.frame.height)
         
         TopRatedCollectionView.view.isHidden = true
         configureHeader()
@@ -137,7 +146,7 @@ extension HomeViewController {
         codeSegmented.backgroundColor = .clear
         self.codeSegmented.translatesAutoresizingMaskIntoConstraints = false
         self.codeSegmented.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 25).isActive = true
-        self.codeSegmented.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25).isActive = true
+        self.codeSegmented.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
         self.codeSegmented.heightAnchor.constraint(equalToConstant: 23).isActive = true
         self.codeSegmented.widthAnchor.constraint(greaterThanOrEqualToConstant: 180).isActive = true
         
@@ -147,7 +156,6 @@ extension HomeViewController {
     }
     
     @objc func didTapChangeFilter(){
-        //print("did tap change filter")
         if (codeSegmented.selectedIndex == 0){
             self.endPoint = MovieListEndPoint.popular
             self.TopRatedCollectionView.view.isHidden = true

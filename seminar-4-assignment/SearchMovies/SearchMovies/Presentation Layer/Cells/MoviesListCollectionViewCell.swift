@@ -13,8 +13,6 @@ import SkeletonView
 
 class MoviesListCollectionViewCell: UICollectionViewCell {
     
-    private var cellDisposeBag = DisposeBag()
-    
     var my_movie : Movie?
     var posterView = UIImageView()
     var ratingLabel = UILabel()
@@ -32,7 +30,6 @@ class MoviesListCollectionViewCell: UICollectionViewCell {
         self.contentView.addSubview(titleLabel)
         configureImage()
         configureTitle()
-        
     }
     
     required init?(coder: NSCoder) {
@@ -53,12 +50,15 @@ class MoviesListCollectionViewCell: UICollectionViewCell {
     }
     
     func configureImage(){
+        
         self.posterView.layer.cornerRadius = 25
         self.posterView.translatesAutoresizingMaskIntoConstraints = false
         self.posterView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
         self.posterView.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-        self.posterView.widthAnchor.constraint(equalToConstant: 151).isActive = true
-        self.posterView.heightAnchor.constraint(equalToConstant: 223).isActive = true
+        self.posterView.widthAnchor.constraint(equalToConstant: 171).isActive = true
+        self.posterView.heightAnchor.constraint(equalToConstant: 252.54).isActive = true
+        
+        
         self.posterView.contentMode = .scaleToFill
         self.posterView.layer.masksToBounds = true
         self.posterView.showGradientSkeleton()
@@ -91,6 +91,7 @@ class MoviesListCollectionViewCell: UICollectionViewCell {
 
 extension UIImageView {
     func load(url: URL) {
+
         DispatchQueue.global().async { [weak self] in
             if let data = try? Data(contentsOf: url) {
                 if let image = UIImage(data: data) {

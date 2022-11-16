@@ -9,7 +9,9 @@ import Foundation
 import UIKit
 import RxDataSources
 
-struct MovieResponse : Decodable{
+
+
+struct MovieResponse : Decodable {
     let results : [Movie]
     
     private enum CodkingKeys: String, CodingKey {
@@ -17,7 +19,8 @@ struct MovieResponse : Decodable{
     }
 }
 
-struct Movie : Decodable{
+
+struct Movie : Decodable {
     let id: Int
     let title: String
     let posterPath: String?

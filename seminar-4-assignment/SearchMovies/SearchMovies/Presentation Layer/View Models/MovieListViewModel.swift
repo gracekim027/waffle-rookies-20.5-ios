@@ -5,7 +5,6 @@
 //  Created by grace kim  on 2022/11/14.
 //
 
-//question: if there has to be a view model for each use case 이거 왜 하는거임?
 
 import Foundation
 import RxSwift
@@ -13,11 +12,6 @@ import RxSwift
 protocol MovieListViewModelProtocol {
     func fetchMovies(with endPoint : MovieListEndPoint)
    
-}
-
-
-struct MovieListViewModelActions {
-    let showMovieDetails: (Movie) -> Void
 }
 
 ///data needed when showing movie in list form

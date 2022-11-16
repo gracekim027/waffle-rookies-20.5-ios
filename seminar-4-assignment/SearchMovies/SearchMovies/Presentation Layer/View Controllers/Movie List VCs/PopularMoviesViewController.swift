@@ -13,10 +13,16 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
 
     private let bag = DisposeBag()
     private let movieListViewModel : MovieListViewModel
+    private let likedVM : SavedMovieListViewModel
     private var endPoint = MovieListEndPoint.popular
+    private let genreList : GenresUseCase
     
-    init(movieListViewModel : MovieListViewModel){
+    init(movieListViewModel : MovieListViewModel,
+         likedVM: SavedMovieListViewModel,
+         genreList : GenresUseCase){
         self.movieListViewModel = movieListViewModel
+        self.likedVM = likedVM
+        self.genreList = genreList
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -52,7 +58,9 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
         
         movieListView.rx.modelSelected(Movie.self)
             .subscribe(onNext: { movie in
-            let VC = MovieDetailViewController(movie: movie)
+            let VC = MovieDetailViewController(movie: movie,
+                                               likedVM: self.likedVM,
+                                               genreList: self.genreList)
             self.navigationController?.pushViewController(VC, animated: true)
             })
             .disposed(by: bag)
@@ -85,7 +93,7 @@ extension PopularMoviesViewController {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (collectionView.frame.width-24)/2, height: 250)
+        return CGSize(width: (collectionView.frame.width-24)/2, height: 280)
     }
     
    

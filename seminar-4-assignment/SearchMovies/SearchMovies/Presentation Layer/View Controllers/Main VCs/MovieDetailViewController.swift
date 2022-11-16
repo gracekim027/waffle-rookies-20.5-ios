@@ -10,8 +10,11 @@ import RxSwift
 import RxCocoa
 
 class MovieDetailViewController: UIViewController {
+    
+    private var disposeBag = DisposeBag()
 
     private var my_movie : Movie
+    private var likedVM : SavedMovieListViewModel
 
     private var posterView = UIImageView()
     
@@ -37,32 +40,30 @@ class MovieDetailViewController: UIViewController {
     private var summaryTitle = UILabel()
     private var summaryLabel = UILabel()
     
-    private let genreList : GenresUseCase
    
-    init(movie : Movie){
+    init(movie : Movie, likedVM: SavedMovieListViewModel, genreList : GenresUseCase){
         self.my_movie = movie
+        self.likedVM = likedVM
+        
+        if (likedVM.searchData(movie: movie)){
+            likeButton.isSelected = true
+        }else{
+            likeButton.isSelected = false
+        }
+        
         let posterURL = URL(string: "https://image.tmdb.org/t/p/original\(movie.posterPath ?? "")")!
         self.posterView.load(url: posterURL)
         self.realRating.text = "\(my_movie.voteAverage) / 10"
         self.rating.text = "Rating"
         self.titleLabel.text = movie.title
         
-        let repo = SearchMoviesRepository()
-        self.genreList = GenresUseCase(dataRepository: repo)
         let genreCode = movie.genreIDs[0]
-        genreList.loadGenres()
         let genreName = genreList.findGenreTitle(with: genreCode)
         self.genreLabel.text = "Genre"
         self.realGenre.text = "\(genreName)"
         let yearText = movie.releaseDate.components(separatedBy: "-")
         self.realYear.text = yearText[0]
         self.summaryLabel.text = movie.overview
-        
-        if (movie.liked){
-            likeButton.isSelected = true
-        }else{
-            likeButton.isSelected = false
-        }
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -110,12 +111,35 @@ class MovieDetailViewController: UIViewController {
     private func configureTabButtons(){
         likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
-        likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
-        
+        likeButton.tintColor = .white
+
         let like = UIBarButtonItem(customView: likeButton)
         like.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -24)
         self.navigationItem.setRightBarButton(like, animated: true)
-        likeButton.tintColor = .white
+        
+        self.likeButton.rx.tapGesture()
+            .when(.recognized)
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                let liked = self.my_movie.liked
+                if (!liked) {
+                    self.likedVM.addToData(movie: self.my_movie)
+                    self.my_movie.liked = true
+                    self.likeButton.isSelected = true
+                    NotificationCenter.default.post(name: NSNotification.Name("didTapLike"), object: nil, userInfo: ["movie": self.my_movie])
+                    self.likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+                    self.likeButton.tintColor = .white
+                        
+                    } else {
+                    self.likedVM.deleteLikedMovie(movie: self.my_movie)
+                    self.my_movie.liked = false
+                    self.likeButton.isSelected = false
+                    NotificationCenter.default.post(name: NSNotification.Name("didTapNotLike"), object: nil, userInfo: ["movie": self.my_movie])
+                    self.likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+                    self.likeButton.tintColor = .white
+                    }
+                }
+            .disposed(by: disposeBag)
         
         
         let backButtonBackgroundImage = UIImage(systemName: "chevron.backward")
@@ -128,20 +152,6 @@ class MovieDetailViewController: UIViewController {
         self.navigationItem.backBarButtonItem?.tintColor = .white
     }
     
-    
-    @objc func didTapLike(){
-        if (self.my_movie.liked == false){
-            //adding to liked movie list
-            self.my_movie.liked = true
-            self.likeButton.isSelected = true
-            NotificationCenter.default.post(name: NSNotification.Name("didTapLike"), object: nil, userInfo: ["movie": self.my_movie])
-        }else {
-            //removing from liked movie list
-            self.my_movie.liked = false
-            self.likeButton.isSelected = false
-            NotificationCenter.default.post(name: NSNotification.Name("didTapNotLike"), object: nil, userInfo: ["movie": self.my_movie])
-        }
-    }
     
     func configurePosterView(){
         self.posterView.layer.cornerRadius = 22

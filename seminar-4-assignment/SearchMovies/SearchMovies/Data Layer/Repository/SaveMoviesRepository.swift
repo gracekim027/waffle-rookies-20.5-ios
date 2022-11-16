@@ -9,15 +9,15 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-class SaveMoviesRepository: SaveMoviesDataRepositoryProtocol {
+class SaveMoviesRepository: SaveDataRepositoryProtocol {
+
     
     private let defaults = UserDefaults.standard
-    
     
     init(){}
     
     ///saves liked movies to  user defaults
-    func saveLikedMovies(moviesToSave: [Movie]) {
+    func saveData(moviesToSave: [Movie]) {
         let movie_save = moviesToSave.map {
             [
                     "id" : $0.id,
@@ -38,7 +38,7 @@ class SaveMoviesRepository: SaveMoviesDataRepositoryProtocol {
     
     
     ///loads saved movies from user defaults
-    func loadLikedMovies(completion: @escaping (Result<[Movie], Error>) -> ()) {
+    func loadSavedData(completion: @escaping (Result<[Movie], Error>) -> ()) {
         let userDefaults = UserDefaults.standard
         guard let movie_save = userDefaults.object(forKey: "likedMovieList") as? [[String: Any]] else {return}
         

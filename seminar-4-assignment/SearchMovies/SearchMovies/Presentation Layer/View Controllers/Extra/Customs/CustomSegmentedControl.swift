@@ -16,6 +16,7 @@ protocol CustomSegmentedControlDelegate:AnyObject {
 
 class CustomSegmentedControl: UIView {
    
+    private let disposeBag = DisposeBag()
     
     private var buttonTitles:[String] = ["Popular","Top Rated"]
     var likedButton = UIButton()
@@ -63,7 +64,7 @@ class CustomSegmentedControl: UIView {
         selectedIndex = index
         button.setTitleColor(selectorTextColor, for: .normal)
         let selectorPosition = frame.width/CGFloat(buttonTitles.count) * CGFloat(index)
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: 0.5) {
             self.selectorView.frame.origin.x = selectorPosition
         }
     }
@@ -76,10 +77,11 @@ class CustomSegmentedControl: UIView {
                 let selectorPosition = frame.width/CGFloat(buttonTitles.count) * CGFloat(buttonIndex)
                 self.selectedIndex = buttonIndex
                 delegate?.change(to: selectedIndex)
-                UIView.animate(withDuration: 0.2) {
+                UIView.animate(withDuration: 0.5) {
                     self.selectorView.frame.origin.x = selectorPosition
+                    btn.setTitleColor(self.selectorTextColor, for: .normal)
                 }
-                btn.setTitleColor(selectorTextColor, for: .normal)
+                
             }
         }
     }
@@ -127,8 +129,5 @@ extension CustomSegmentedControl {
             buttons.append(button)
         }
         buttons[0].setTitleColor(selectorTextColor, for: .normal)
-        NotificationCenter.default.post(name: NSNotification.Name("buttonsSet"), object: nil)
     }
-    
-    
 }

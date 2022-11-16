@@ -59,7 +59,8 @@ class TopRatedMoviesViewController: UIViewController, UICollectionViewDelegateFl
         
         movieListView.rx.modelSelected(Movie.self)
             .subscribe(onNext: { movie in
-                let VC = MovieDetailViewController(movie: movie,
+                let movieDetailVM = MovieDetailViewModel(movie: movie)
+                let VC = MovieDetailViewController(movieVM: movieDetailVM,
                                                    likedVM: self.likedVM,
                                                    genreList: self.genreList)
             self.navigationController?.pushViewController(VC, animated: true)

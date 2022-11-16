@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		656873F129251F2C00E48DAA /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656873F029251F2C00E48DAA /* MovieDetailViewModel.swift */; };
 		65BCD1B9290ADB4F00C80A15 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65BCD193290ADB4E00C80A15 /* Assets.xcassets */; };
 		65BCD1BA290ADB4F00C80A15 /* CustomTabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCD196290ADB4E00C80A15 /* CustomTabItem.swift */; };
 		65BCD1BB290ADB4F00C80A15 /* CustomItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCD197290ADB4E00C80A15 /* CustomItemView.swift */; };
@@ -41,6 +42,7 @@
 /* Begin PBXFileReference section */
 		05ADED8729246AF56EE12D25 /* Pods_SearchMovies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SearchMovies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F4186BCA311BDC75E4569F7 /* Pods-SearchMovies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SearchMovies.release.xcconfig"; path = "Target Support Files/Pods-SearchMovies/Pods-SearchMovies.release.xcconfig"; sourceTree = "<group>"; };
+		656873F029251F2C00E48DAA /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
 		65BCD176290AD9AD00C80A15 /* SearchMovies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SearchMovies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65BCD187290AD9AF00C80A15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65BCD193290ADB4E00C80A15 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 			children = (
 				65D298A429221B3900B949A6 /* MovieListViewModel.swift */,
 				65FB06B429236FBF003F7DED /* SavedMovieListViewModel.swift */,
+				656873F029251F2C00E48DAA /* MovieDetailViewModel.swift */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
@@ -402,6 +405,7 @@
 				65BCD1C4290ADB4F00C80A15 /* HomeViewController.swift in Sources */,
 				65BCD1C8290ADB4F00C80A15 /* CustomTabBarController.swift in Sources */,
 				65BCD1C5290ADB4F00C80A15 /* TopRatedMoviesViewController.swift in Sources */,
+				656873F129251F2C00E48DAA /* MovieDetailViewModel.swift in Sources */,
 				65BCD1BD290ADB4F00C80A15 /* CustomTabBar.swift in Sources */,
 				65D298AF2922298000B949A6 /* SaveMoviesRepository.swift in Sources */,
 				65BCD1BB290ADB4F00C80A15 /* CustomItemView.swift in Sources */,

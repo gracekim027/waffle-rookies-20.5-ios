@@ -41,29 +41,32 @@ class MovieDetailViewController: UIViewController {
     private var summaryLabel = UILabel()
     
    
-    init(movie : Movie, likedVM: SavedMovieListViewModel, genreList : GenresUseCase){
-        self.my_movie = movie
+    init(movieVM : MovieDetailViewModel,
+         likedVM: SavedMovieListViewModel,
+         genreList : GenresUseCase){
+        
+        self.my_movie = movieVM.getMovie()
         self.likedVM = likedVM
         
-        if (likedVM.searchData(movie: movie)){
+        if (likedVM.searchData(movie: my_movie)){
             likeButton.isSelected = true
         }else{
             likeButton.isSelected = false
         }
         
-        let posterURL = URL(string: "https://image.tmdb.org/t/p/original\(movie.posterPath ?? "")")!
+        let posterURL = URL(string: "https://image.tmdb.org/t/p/original\(my_movie.posterPath ?? "")")!
         self.posterView.load(url: posterURL)
         self.realRating.text = "\(my_movie.voteAverage) / 10"
         self.rating.text = "Rating"
-        self.titleLabel.text = movie.title
+        self.titleLabel.text = my_movie.title
         
-        let genreCode = movie.genreIDs[0]
+        let genreCode = my_movie.genreIDs[0]
         let genreName = genreList.findGenreTitle(with: genreCode)
         self.genreLabel.text = "Genre"
         self.realGenre.text = "\(genreName)"
-        let yearText = movie.releaseDate.components(separatedBy: "-")
+        let yearText = my_movie.releaseDate.components(separatedBy: "-")
         self.realYear.text = yearText[0]
-        self.summaryLabel.text = movie.overview
+        self.summaryLabel.text = my_movie.overview
         
         super.init(nibName: nil, bundle: nil)
     }

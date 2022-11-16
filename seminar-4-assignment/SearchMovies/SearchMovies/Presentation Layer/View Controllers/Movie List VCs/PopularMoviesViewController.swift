@@ -58,9 +58,10 @@ class PopularMoviesViewController: UIViewController, UICollectionViewDelegateFlo
         
         movieListView.rx.modelSelected(Movie.self)
             .subscribe(onNext: { movie in
-            let VC = MovieDetailViewController(movie: movie,
-                                               likedVM: self.likedVM,
-                                               genreList: self.genreList)
+            let movieDetailVM = MovieDetailViewModel(movie: movie)
+            let VC = MovieDetailViewController(movieVM: movieDetailVM,
+                                                   likedVM: self.likedVM,
+                                                   genreList: self.genreList)
             self.navigationController?.pushViewController(VC, animated: true)
             })
             .disposed(by: bag)

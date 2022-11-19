@@ -15,7 +15,6 @@ class MovieDetailViewController: UIViewController {
 
     var posterView = UIImageView()
     
-    
     var titleLabel = UILabel()
     var divider = UILabel()
     
